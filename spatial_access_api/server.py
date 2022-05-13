@@ -106,6 +106,9 @@ def check_job_status(job_id):
                        exception_message=exception_message), 500
     return jsonify(job_id=job_id, job_status=job_status), 200
 
+@application.route('/health', methods=['GET'])
+def health():
+    return Response(status=200)
 
 @application.route('/deleteJobResults/<job_id>', methods=['DELETE'])
 def delete_job_results(job_id):
