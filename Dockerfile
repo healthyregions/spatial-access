@@ -29,4 +29,4 @@ COPY --from=FRONTEND /app /app/react_app
 
 EXPOSE 5000
 
-CMD ["python", "server.py", "--deploy"]
+CMD ["python", "server.py", "--deploy", "--port", "5000"]
