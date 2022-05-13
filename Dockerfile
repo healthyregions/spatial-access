@@ -27,6 +27,6 @@ COPY spatial_access_api /app
 
 COPY --from=FRONTEND /app /app/react_app
 
-
+EXPOSE 5000
 
 CMD ["python", "server.py", "--deploy"]
