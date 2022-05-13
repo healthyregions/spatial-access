@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = {extras = ["all"], version = "*"}
+unicorn = "*"
+uvicorn = "*"
+spatial-access = ">=0.1.16"
+gunicorn = ">=19.9.0"
+Flask = ">=1.0.2"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
