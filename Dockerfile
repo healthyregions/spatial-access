@@ -25,7 +25,7 @@ RUN pip install -r requirements.txt
 
 COPY spatial_access_api /app
 
-COPY --from=FRONTEND /app /app/react_app
+COPY --from=FRONTEND /app/build /app/react_app
 
 EXPOSE 5000
 
