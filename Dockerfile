@@ -14,7 +14,11 @@ RUN yarn build
 
 FROM python:3
 
+RUN apt-get update && apt-get -y install  libspatialindex-dev python-tk
+
+
 RUN pip install waitress
+
 
 MAINTAINER Stuart Lynn "stuart.lynn@gmail.com"
 
