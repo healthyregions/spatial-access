@@ -11,13 +11,18 @@ import {
   MenuItem,
   Slider,
   Grid,
+  Button,
 } from "@mui/material";
 import { Section } from "./Section";
 
-import { CalculationSettings } from "./types";
+import {Geom,TravelMode,Job} from './Job'
 
 interface CalculationParametersSectionProps {
-  onDone: (update: CalculationSettings) => void;
+  mode: TravelMode,
+  geom: Geom,
+  threshold:number,
+  onUpdate: (update: Partial<Job>) => void;
+  onNextStep: () => void;
 }
 
 
@@ -27,58 +32,15 @@ function formatTime(minutes: number){
 
 export const CalculationParametersSection: React.FC<
   CalculationParametersSectionProps
-> = ({ onDone }) => {
+> = ({ onUpdate, mode, geom, threshold,onNextStep}) => {
   
-  const [params, setParams] = useState<Partial<CalculationSettings>>({ upperThreshold: 10, travelMode:"walk"})
-
-  useEffect(()=>{
-    if(Object.values(params).every(v=>v)){
-      onDone(params as CalculationSettings)
-    }
-  },[params])
-
   return (
     <Section
-      title={"What do you want to calculate"}
+      title={"The basics"}
       imageUrl={"calculate_pic.png"}
     >
       <FormGroup>
         <Grid container direction="column" spacing={3}>
-          <Grid item>
-            <FormControlLabel
-              control={<Checkbox defaultChecked />}
-              label={"Measures of Origins' Spatial Proximity to Destinations"}
-              checked={params.spaitalProximity}
-              onChange={(e, checked) =>
-                setParams({
-                  ...params,
-                  spaitalProximity: checked,
-                })
-              }
-            />
-            <ul>
-              <li>Time to Closest Destination</li>
-              <li>Count of Accessiable Destinations</li>
-              <li>Spatial Accss Score</li>
-            </ul>
-          </Grid>
-          <Grid item>
-            <FormControlLabel
-              control={<Checkbox />}
-              label={"Measures of Origins' Spatial Proximity to Destinations"}
-              checked={params.catchmentAreas}
-              onChange={(e, checked) =>
-                setParams({
-                  ...params,
-                  catchmentAreas: checked,
-                })
-              }
-            />
-            <ul>
-              <li>Number of People within Travel Time</li>
-              <li>Per Capita Spending</li>
-            </ul>
-          </Grid>
           <Grid item>
             <FormControl fullWidth>
               <InputLabel id="travel-mode-label">
@@ -87,39 +49,63 @@ export const CalculationParametersSection: React.FC<
               <Select
                 labelId="travel-mode-label"
                 id="tarvel-mode"
-                value={params.travelMode}
+                value={mode}
                 label="Travel Mode"
                 onChange={(e) => {
-                  setParams({
-                    ...params,
-                    //@ts-ignore
-                    travelMode: e.target.value,
+                  onUpdate({
+                    mode : e.target.value as TravelMode,
                   });
                 }}
               >
                 <MenuItem value={"walk"}>Walking</MenuItem>
-                <MenuItem value={"drive"}>Driving</MenuItem>
+                <MenuItem value={"car"}>Driving</MenuItem>
                 <MenuItem value={"bike"}>Biking</MenuItem>
               </Select>
             </FormControl>
           </Grid>
           <Grid item>
-            <Typography gutterBottom>Max Travel (mins): {formatTime(params.upperThreshold!)}</Typography>
+            <FormControl fullWidth>
+              <InputLabel id="travel-mode-label">
+                Target Geometry 
+              </InputLabel>
+              <Select
+                labelId="travel-mode-label"
+                id="tarvel-mode"
+                value={geom}
+                label="Travel Mode"
+                onChange={(e) => {
+                  onUpdate({
+                    geom: e.target.value as Geom,
+                  });
+                }}
+              >
+                <MenuItem value={"tract"}>Census Tracts</MenuItem>
+                <MenuItem value={"zip"}>Zip Codes</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <Typography gutterBottom>Max Travel Time (mins): {formatTime(threshold)}</Typography>
 
             <Slider
               aria-label="Min Travel Distance"
-              value={params.upperThreshold}
+              value={threshold}
               valueLabelFormat={(minutes:number, index:number)=> formatTime(minutes) }
               valueLabelDisplay="auto"
-              min={1}
-              max={24*60}
+              min={9}
+              max={90}
+              step={1}
               onChange={(e, val) =>
-                setParams({
-                  ...params,
-                  upperThreshold: Array.isArray(val) ? val[0] : val,
+                onUpdate({
+                  threshold:Array.isArray(val) ? val[0] : val,
                 })
               }
             />
+          </Grid>
+          <Grid item>
+            <Box sx={{width:"100%",display:'flex',flexDirection:'row', justifyContents:'space-between'}}>
+              <Button onClick={onNextStep} variant={'contained'}>Next</Button>
+            </Box>
           </Grid>
         </Grid>
       </FormGroup>

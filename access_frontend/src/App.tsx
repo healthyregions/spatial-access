@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import logo from "./logo.svg";
 
 import "./App.css";
 import { Box, Button, Grid, ThemeProvider } from "@mui/material";
@@ -8,10 +7,14 @@ import { createTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Typography from "@mui/material/Typography";
 import CssBaseline from "@mui/material/CssBaseline";
-import { CalculationSettings, ODFileDetails } from "./types";
+// import { CalculationSettings, ODFileDetails } from "./types";
 import { CalculationParametersSection } from "./CalculationParametersSection";
-import { UploadODFileSection } from "./UploadODFileSection";
-import {JobRunner} from "./JobRunner";
+// import { UploadODFileSection } from "./UploadODFileSection";
+// import { JobRunner } from "./JobRunner";
+import { Job } from "./Job";
+import { DestinationsStep } from "./DestinationsStep";
+import { AdditionalMetricsStep} from "./AdditionalMetrics";
+import {FileSelection} from "./FileSelection";
 
 const theme = createTheme({
   palette: {
@@ -27,14 +30,26 @@ const theme = createTheme({
 });
 
 function App() {
-  const [calculationSettings, setCalculationSettings] =
-    useState<CalculationSettings | null >(null);
 
-  const [originFileDetails, setOriginFileDetails] =
-    useState<ODFileDetails | null>(null);
+  const [job, setJob] = useState<Job>({
+    mode: "car",
+    geom: "tract",
+    threshold: 30,
+    destinationFormat: "point",
+    includeAccessModel:false,
+    includeGravityModel:false, 
+    populationSource: 'census'
+  });
 
-  const [destinationFileDetails, setDestinationFileDetails] =
-    useState<ODFileDetails | null>(null);
+  const [destinationFile, setDestinationFile] = useState<File|null>(null)
+  const [populationFile, setPopulationFile] = useState<File|null>(null)
+
+  const [steps, setSteps] = useState<Record<string,boolean>>({
+    basics:false,
+    metrics:false,
+    destFormat:false,
+    uploads:false
+  })
 
 
   return (
@@ -49,40 +64,65 @@ function App() {
         </AppBar>
       </Box>
 
-      <Box sx={{width:"100vw", overflowY:'auto', paddingBottom:"200px", boxSizing:'border-box'}}>
-
-      <Grid
-        container
-        direction="column"
-        width={"1000px"}
-        sx={{ margin: "auto", overflowY: "auto" }}
+      <Box
+        sx={{
+          width: "100vw",
+          overflowY: "auto",
+          paddingBottom: "200px",
+          boxSizing: "border-box",
+        }}
       >
-        <Grid item>
-          <CalculationParametersSection onDone={setCalculationSettings} />
-        </Grid>
-        <Grid item>
-          <UploadODFileSection
-            onChange={setOriginFileDetails}
-            title={"Add Origins"}
-            variant={"dark"}
-            imageUrl={"origins_pic.png"}
-            amountColLabel={"Population Col"}
-          />
-          <UploadODFileSection
-            includeCategory={true}
-            onChange={setDestinationFileDetails}
-            title={"Add Destinations"}
-            imageUrl={"destinations_pic.png"}
-            amountColLabel={"Capacity Col"}
-          />
-        </Grid>
-        {calculationSettings && originFileDetails && destinationFileDetails &&(
+        <Grid
+          container
+          direction="column"
+          width={"1000px"}
+          sx={{ margin: "auto", overflowY: "auto" }}
+        >
           <Grid item>
-            <JobRunner calcParams={calculationSettings} originParams={originFileDetails} destParams={destinationFileDetails} />
+            <CalculationParametersSection
+              onNextStep={() => setSteps({...steps,basics:true})}
+              onUpdate={(update) => setJob({ ...job, ...update })}
+              mode={job.mode}
+              threshold={job.threshold}
+              geom={job.geom}
+            />
           </Grid>
-        )}
-      </Grid>
-    </Box>
+          {steps.basics &&
+            <Grid item>
+              <AdditionalMetricsStep
+                onUpdate={(update) => setJob({...job,...update})}
+                onNextStep={() => setSteps({...steps, metrics:true})}
+                job={job}
+            />
+            </Grid>
+          }
+          {steps.metrics &&
+            <Grid item>
+              <DestinationsStep
+                onUpdate={(update)=> setJob({...job,...update})}
+                onNextStep={() => setSteps({...steps, destinationFormat:true})}
+                job={job}
+              />
+            </Grid>
+          }
+          {steps.destinationFormat &&
+            <Grid item>
+              <FileSelection
+                onUpdate={(update) => setJob({...job, ...update})}
+                onNextStep={() => setSteps({...steps, uploads:true})}
+                title={"File selection"}
+                imageUrl={""} 
+                job={job}
+              />
+            </Grid>
+          }
+          {steps.uploads && 
+            <Grid item>
+              <Button variant="contained">Process</Button>
+            </Grid>
+          }
+        </Grid>
+      </Box>
     </ThemeProvider>
   );
 }
