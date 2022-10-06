@@ -25,7 +25,7 @@ def create_job(event,context):
     sourcePopulationColumn= body['sourcePopulationColumn'] if "sourcePopulationColumn" in body else None
     sourceIdColumn= body['sourceIdColumn'] if "sourceIdColumn" in body else None
     destIdCol= body['destIdCol'] if "destIdCol" in body else "id"
-    destLatCol= body['destLatCol'] if "destLatCol " in body else "Latitude"
+    destLatCol= body['destLatCol'] if "destLatCol" in body else "Latitude"
     destLngCol= body['destLngCol'] if "destLngCol" in body else "Longitude"
     destAdminCol= body['admin'] if "admin" in body else None
     destinationFormat = body['destinationFormat'] if "destinationFormat" in body else "point" 
