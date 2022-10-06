@@ -1,44 +1,34 @@
 import { Button, Typography } from "@mui/material";
 import React from "react";
-import { CalculationSettings, ODFileDetails } from "./types";
+import {Job} from './Job'
 import { useJobRunner } from "./useJobRunner";
 
 interface JobRunnerProps {
-  calcParams: CalculationSettings;
-  originParams: ODFileDetails;
-  destParams: ODFileDetails;
+  job: Job;
+  destinationFile?: File;
+  populationFile?: File;
 }
 
 export const JobRunner: React.FC<JobRunnerProps> = ({
-  calcParams,
-  originParams,
-  destParams,
+  job,
+  destinationFile,
+  populationFile
 }) => {
-  const { result, run, jobId, error, running } = useJobRunner(
-    calcParams,
-    originParams,
-    destParams
-  );
 
-  console.log("error is ",error)
-
+  const { result, error, run, status, isValid} = useJobRunner(job, destinationFile,populationFile);
   return (
     <>
-      <Button
-        disabled={running}
-        onClick={(e) => {
-          run();
-        }}
-        fullWidth
-        variant="contained"
-      >
-        {running ? "Running" : "Run calculation please"}
-      </Button>
+      {status ==='pending' &&
+        <Button disabled={!isValid} onClick={()=>run()} variant={"contained"}>Submit Job</Button>
+      }
       {error &&
         <Typography sx={{color:"red"}}>{error.message}</Typography>
       }
-      {result &&
-        <a href={result}>Download Results</a>
+      {status === 'done' && result &&
+        <a href={result.result_url}>Download Results</a>
+      }
+      {!result && !error &&
+        <Typography >{status}</Typography>
       }
     </>
   );

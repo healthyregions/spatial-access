@@ -5,10 +5,11 @@ interface InputForDetailProps{
   value: string | undefined;
   title: string;
   onChange: (update: string) => void;
+  disabled?: boolean
 }
 
 
-export const InputForDetail: React.FC<InputForDetailProps> = ({ items, title, onChange, value }) => {
+export const InputForDetail: React.FC<InputForDetailProps> = ({ items, title, onChange, value, disabled=false }) => {
   return (
     <FormControl fullWidth>
       <InputLabel id={`${title}_label`}>{title}</InputLabel>
@@ -17,6 +18,7 @@ export const InputForDetail: React.FC<InputForDetailProps> = ({ items, title, on
         id={title}
         value={value}
         label={title}
+        disabled={disabled}
         onChange={(e) => onChange(e.target.value!)}
       >
         {items.map((item) => (

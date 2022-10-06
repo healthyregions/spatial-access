@@ -21,30 +21,27 @@ org: stuartlynn
 frameworkVersion: '3'
 
 provider:
+  httpApi:
+    cors: true
   name: aws
   runtime: python3.8
+  region: us-east-2
+  timeout: 20
+  environment:
+    ACCESS_BUCKET: 'access-metrics-dev'
+    ACCESS_PATH: "jobs" 
+    REGION_NAME: 'us-east-2'
+  iam:
+   role:
+     statements:
+       - Effect: "Allow"
+         Action:
+           - "s3:*"
+         Resource: "arn:aws:s3:::${self:provider.environment.ACCESS_BUCKET}/${self:provider.environment.ACCESS_PATH}/*" 
+# you can overwrite defaults here stage: dev region: us-east-1
 
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
 
 # you can add statements to the Lambda function's IAM Role here
-#  iam:
-#    role:
-#      statements:
-#        - Effect: "Allow"
-#          Action:
-#            - "s3:ListBucket"
-#          Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#        - Effect: "Allow"
-#          Action:
-#            - "s3:PutObject"
-#          Resource:
-#            Fn::Join:
-#              - ""
-#              - - "arn:aws:s3:::"
-#                - "Ref" : "ServerlessDeploymentBucket"
-#                - "/*"
 
 # you can define service wide environment variables here
 #  environment:
@@ -59,39 +56,40 @@ provider:
 #    - include-me-dir/**
 
 functions:
-  metrics_async_test:
-    handler: handler.metrics_async_test
-    # destinations:
-    #   onSuccess:
-    #     metrics_success
-    #   onFailure:
-    #     metrics_failure
+  create_job:
+    handler: handler.create_job
     events:
       - httpApi:
-          path: /metrics_test
-          method: get
-  metrics_success:
-    handler: handler.metrics_success
-  metrics_failure:
-    handler: handler.metrics_success
-  metrics: 
-    handler: handler.calc_metrics
+          path: /jobs
+          method: post
+  get_job:
+    handler: handler.get_job
+    events:
+      - httpApi:
+          path: /jobs/{job_id}
+          method: get 
+  run_job:
+    handler: handler.run_job
+    events:
+      - httpApi:
+          path: /jobs/{job_id}/run
+          method: post 
+  process_job:
+    handler: geo_handler.process_job
     timeout: 300
     memorySize: 10240
-    destinations:
-      onSuccess:
-        metrics_success
-      onFailure:
-        metrics_failure
     events:
-      - httpApi:
-          path: /metrics
-          method: get
+      - s3:
+          bucket: access-metrics-dev 
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: jobs/ 
+            - suffix: .json
+          existing: true
+          forceDeploy: true
   hello:
-    handler: handler.hello
-#    The following are a few example events you can configure
-#    NOTE: Please make sure to change your handler code to work with those events
-#    Check the event documentation for details
+    handler: geo_handler.hello
+#    The following are a few example events you can configure NOTE: Please make sure to change your handler code to work with those events Check the event documentation for details
 #    events:
 #      - httpApi:
 #          path: /users/create
@@ -147,4 +145,5 @@ custom:
   pythonRequirements:
     dockerizePip: true
     zip: true # <- here! 
-    slim: true
+    strip: false
+    # slim: true
