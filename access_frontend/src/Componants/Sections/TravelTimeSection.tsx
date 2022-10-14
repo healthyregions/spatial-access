@@ -1,7 +1,7 @@
 import React from "react";
 import { Slider, Stack, Typography } from "@mui/material";
 
-import { Job } from "../../Job";
+import { Job } from "../../Types/Job";
 import { SectionComponentSpec } from "../../App";
 
 function formatTime(minutes: number) {

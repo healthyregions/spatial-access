@@ -1,7 +1,7 @@
 import { Button, Typography } from "@mui/material";
 import React from "react";
-import {Job} from './Job'
-import { useJobRunner } from "./Hooks/useJobRunner";
+import {Job} from '../../Types/Job'
+import { useJobRunner } from "../../Hooks/useJobRunner";
 
 interface JobRunnerProps {
   job: Job;

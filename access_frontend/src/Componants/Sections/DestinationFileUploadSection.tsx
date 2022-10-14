@@ -1,12 +1,10 @@
-import React, { useEffect, useCallback, useState } from "react";
-import { Slider, Stack, Grid, FormGroup, Button, Typography } from "@mui/material";
-import { Job } from "../../Job";
+import React, { useEffect, useCallback } from "react";
+import { Stack, Grid, FormGroup, Button, Typography } from "@mui/material";
+import { Job } from "../../Types/Job";
 import { SectionComponentSpec } from "../../App";
-import { Section } from "../../Section";
 import { useDropzone } from "react-dropzone";
 import { InputForDetail } from "../Layout/InputForDetail";
 import { useFileColumns } from "../../Hooks/useFileColumns";
-import {JobRunner} from "../../JobRunner";
 
 interface FileSelectionProps {
   onUpdate: (detials: Partial<Job>) => void;

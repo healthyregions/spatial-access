@@ -7,7 +7,7 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import {TravelMode,Job} from '../../Job'
+import {TravelMode,Job} from '../../Types/Job'
 import { SectionComponentSpec } from "../../App";
 
 const TravelModeSectionComponent: React.FC<

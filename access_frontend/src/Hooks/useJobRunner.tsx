@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import {Job} from "../Job";
-import { CalculationSettings, JobParams, ODFileDetails } from "../types";
+import {Job} from "../Types/Job";
+import { CalculationSettings, JobParams, ODFileDetails } from "../Types/types";
 
 const BASE_URL = "https://7kng2w0ibk.execute-api.us-east-2.amazonaws.com"
 
