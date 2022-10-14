@@ -1,18 +1,19 @@
-import { Button, FormGroup, Grid, Typography } from "@mui/material";
-import React, { useCallback, useEffect, useState } from "react";
-import { Section } from "./Section";
+import React, { useEffect, useCallback, useState } from "react";
+import { Slider, Stack, Grid, FormGroup, Button, Typography } from "@mui/material";
+import { Job } from "../../Job";
+import { SectionComponentSpec } from "../../App";
+import { Section } from "../../Section";
 import { useDropzone } from "react-dropzone";
-import { InputForDetail } from "./InputForDetail";
-import { useFileColumns } from "./useFileColumns";
-import { Job } from "./Job";
-import {JobRunner} from "./JobRunner";
+import { InputForDetail } from "../Layout/InputForDetail";
+import { useFileColumns } from "../../Hooks/useFileColumns";
+import {JobRunner} from "../../JobRunner";
 
 interface FileSelectionProps {
   onUpdate: (detials: Partial<Job>) => void;
-  onNextStep: () => void;
+  onNextStep?: () => void;
   variant?: "light" | "dark";
   title: string;
-  imageUrl: string;
+  imageUrl?: string;
   includeCategory?: boolean;
   includeWeight?: boolean;
   includeCapacity?: boolean;
@@ -214,15 +215,6 @@ export const DestinationFileSelection: React.FC<
               </Typography>
             </Grid>
           )}
-          <Grid item>
-            <InputForDetail
-              value={job.destIdCol}
-              items={columns ?? []}
-              title={"Unique Id Col"}
-              onChange={(destIdCol) => onUpdate({ destIdCol })}
-              disabled={inputsActive}
-            />
-          </Grid>
           {job.destinationFormat === "point" ? (
             <>
               <Grid item>
@@ -230,7 +222,7 @@ export const DestinationFileSelection: React.FC<
                 <InputForDetail
                   value={job.destLatCol}
                   items={columns ?? []}
-                  title={"Latitude Col"}
+                  title={"Latitude Column"}
                   onChange={(destLatCol) => onUpdate({ destLatCol })}
                   disabled={inputsActive}
                 />
@@ -239,7 +231,7 @@ export const DestinationFileSelection: React.FC<
                 <InputForDetail
                   value={job.destLngCol}
                   items={columns ?? []}
-                  title={"Longitude Col"}
+                  title={"Longitude Column"}
                   onChange={(destLngCol) => onUpdate({ destLngCol})}
                   disabled={inputsActive}
                 />
@@ -282,7 +274,7 @@ export const DestinationFileSelection: React.FC<
               />
             </Grid>
           )}
-          {job.useWeights && (
+          {/* {job.useWeights && (
             <Grid item>
               <InputForDetail
                 value={job.weightColumn}
@@ -292,7 +284,7 @@ export const DestinationFileSelection: React.FC<
                 disabled={inputsActive}
               />
             </Grid>
-          )}
+          )} */}
         </Grid>
       </FormGroup>
     </section>
@@ -309,33 +301,55 @@ export const FileSelection: React.FC<FileSelectionProps> = ({
   includeWeight = false,
   includeCapacity = false,
 }) => {
-  const [destinationFile, setDestinationFile] = useState<File | undefined>(
-    undefined
-  );
-  const [populationFile, setPopulationFile] = useState<File | undefined>(
-    undefined
-  );
-  const requiresPopulationFile = (job.includeAccessModel || job.includeGravityModel) && job.populationSource === "custom"
-  const [running, setRunning] = useState(false)
-  console.log(job)
+  const {destinationFile, populationFile, includeModelMetrics, populationSource} = job;
+  const requiresPopulationFile = (includeModelMetrics) && populationSource === "custom"
 
   return (
-    <Section title={title} variant={variant} imageUrl={imageUrl}>
+    <Stack direction="column" spacing={3}>
+      
       <DestinationFileSelection
         onUpdate={onUpdate}
-        onFile={(file) => setDestinationFile(file)}
+        onFile={(destinationFile) => onUpdate({destinationFile})}
         job={job}
         file={destinationFile}
       />
       { requiresPopulationFile && (
           <PopulationFileSelection
             onUpdate={onUpdate}
-            onFile={(file) => setPopulationFile(file)}
+            onFile={(populationFile) => onUpdate({populationFile})}
             job={job}
             file={populationFile}
           />
         )}
-        <JobRunner job={job} destinationFile={destinationFile} populationFile={populationFile} />
-    </Section>
+    </Stack>
   );
 };
+
+
+const DestinationFileUploadComponent: React.FC<SectionComponentSpec> = ({
+  onUpdate,
+  job,
+}) => {
+  return (
+    <Stack direction="column" spacing={2} width="50%">
+      <FileSelection onUpdate={onUpdate} job={job} title="Destination File Settings" />
+    </Stack>
+  );
+};
+
+const canProgress = (job: Job) => !!(job.destinationFile) && !!(job.populationFile || !job.includeModelMetrics || job.populationSource !== "custom");
+const shouldShow = (job: Job, step: number) =>
+  (step > 2 && !job.includeModelMetrics) ||
+  (step > 4 && job.includeModelMetrics);
+const prompt = (_job: Job) => "Select your file";
+const tooltip = (_job: Job) => "You'll need to provide some additional information about your file before submitting.";
+
+const DestinationFileUploadSection = {
+  component: DestinationFileUploadComponent,
+  canProgress,
+  shouldShow,
+  prompt,
+  tooltip,
+};
+
+export default DestinationFileUploadSection;

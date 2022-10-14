@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import {Job} from "./Job";
-import { CalculationSettings, JobParams, ODFileDetails } from "./types";
+import {Job} from "../Job";
+import { CalculationSettings, JobParams, ODFileDetails } from "../types";
 
 const BASE_URL = "https://7kng2w0ibk.execute-api.us-east-2.amazonaws.com"
 
@@ -21,7 +21,7 @@ const validateJob =(job:Job, destinationFile?:File, populationFile?:File)=>{
 
 
   // If we are using an acces model or gravity model 
-  if(job.includeAccessModel || job.includeGravityModel){
+  if(job.includeModelMetrics){
     // Check to see if we have a custom source that we also have a populationFile and a source population column selected 
     if(job.populationSource ==='custom' && !(job.sourcePopulationColumn && populationFile)){
       console.log("Not valid because we have specified a custom population but have either not included a population column or there is no populationFile")
@@ -88,7 +88,7 @@ export const useJobRunner = (
       const {destination_upload_url, population_upload_url} = jobResponse
       await uploadFileToPresigned(destinationFile!, destination_upload_url)
 
-      if((job.includeAccessModel  || job.includeGravityModel) && job.populationSource === "custom"){
+      if((job.includeModelMetrics) && job.populationSource === "custom"){
         setStatus("Uploading Population File")
         await uploadFileToPresigned(populationFile!, population_upload_url)
         await fetch(population_upload_url.url, {method:"POST", body:JSON.stringify(population_upload_url.fields)})

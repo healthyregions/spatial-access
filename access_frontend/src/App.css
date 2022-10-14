@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+@keyframes Fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: Fade-in 0.5s ease-in;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 1;
+}
