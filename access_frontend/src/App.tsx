@@ -19,7 +19,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 // import { CalculationParametersSection } from "./Componants/Sections/CalculationParametersSection";
 // import { UploadODFileSection } from "./UploadODFileSection";
 // import { JobRunner } from "./JobRunner";
-import { Job } from "./Job";
+import { Job } from "./Types/Job";
 // import { DestinationsStep } from "./Componants/Sections/DestinationsStep";
 // import { AdditionalMetricsStep } from "./Componants/Sections/AdditionalMetrics";
 // import { FileSelection } from "./Componants/Sections/FileSelection";
@@ -39,7 +39,7 @@ import WeightSelectionSection from "./Componants/Sections/WeightSelectionSection
 import ModelSelectionSection from "./Componants/Sections/ModelSelectionSection";
 import DestinationInputFormatSection from "./Componants/Sections/DestinationsInputFormatSection";
 import DestinationFileUploadSection from "./Componants/Sections/DestinationFileUploadSection";
-import { JobRunner } from "./JobRunner";
+import { JobRunner } from "./Componants/Layout/JobRunner";
 
 const theme = createTheme({
   palette: {

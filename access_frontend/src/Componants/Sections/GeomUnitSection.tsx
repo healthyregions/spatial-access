@@ -6,7 +6,7 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { Geom, Job } from "../../Job";
+import { Geom, Job } from "../../Types/Job";
 import { SectionComponentSpec } from "../../App";
 
 

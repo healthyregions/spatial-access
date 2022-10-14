@@ -8,7 +8,7 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import {Job, ModelType} from '../../Job'
+import {Job, ModelType} from '../../Types/Job'
 import { SectionComponentSpec } from "../../App";
 
 const ModelSelectionSectionComponent: React.FC<

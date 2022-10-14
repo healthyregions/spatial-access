@@ -10,7 +10,7 @@ import {
   FormControlLabel,
   Radio,
 } from "@mui/material";
-import { DestinationFormat, Job } from "../../Job";
+import { DestinationFormat, Job } from "../../Types/Job";
 import { SectionComponentSpec } from "../../App";
 
 const DestinationInputFormatSectionComponent: React.FC<

@@ -7,7 +7,7 @@ import {
   FormControlLabel,
   Typography
 } from "@mui/material";
-import {Job} from '../../Job'
+import {Job} from '../../Types/Job'
 import { SectionComponentSpec } from "../../App";
 import { TextDictionary } from "../../Util/TextDictionary";
 

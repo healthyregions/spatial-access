@@ -6,9 +6,9 @@ import {
   FormControlLabel,
   Typography,
 } from "@mui/material";
-import { Job } from "../../Job";
+import { Job } from "../../Types/Job";
 import { SectionComponentSpec } from "../../App";
-import { PopulationSource } from "../../Job";
+import { PopulationSource } from "../../Types/Job";
 
 const PopulationDataSectionComponent: React.FC<SectionComponentSpec> = ({
   onUpdate,
