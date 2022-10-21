@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@mui/icons-material": "^5.10.9"
+    "@mui/icons-material": "^5.10.9",
+    "react-scripts": "^5.0.1"
   }
 }
