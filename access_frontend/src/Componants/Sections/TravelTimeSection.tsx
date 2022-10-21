@@ -54,6 +54,7 @@ const TravelTimeSection = {
   shouldShow,
   prompt,
   tooltip,
+  name:"TravelTimeSection"
 };
 
 export default TravelTimeSection;

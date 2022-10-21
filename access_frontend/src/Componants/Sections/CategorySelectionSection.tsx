@@ -64,6 +64,7 @@ const CategorySelectionSection = {
   shouldShow,
   prompt,
   tooltip,
+  name:"CategorySelectionSection"
 };
 
 export default CategorySelectionSection;

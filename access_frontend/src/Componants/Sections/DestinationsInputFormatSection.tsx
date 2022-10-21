@@ -73,6 +73,7 @@ const DestinationInputFormatSection = {
   shouldShow,
   prompt,
   tooltip,
+  name:"DestinationInputFormatSection"
 };
 
 export default DestinationInputFormatSection;

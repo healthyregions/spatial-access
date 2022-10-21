@@ -336,9 +336,10 @@ const DestinationFileUploadComponent: React.FC<SectionComponentSpec> = ({
 };
 
 const canProgress = (job: Job) => !!(job.destinationFile) && !!(job.populationFile || !job.includeModelMetrics || job.populationSource !== "custom");
-const shouldShow = (job: Job, step: number) =>
-  (step > 2 && !job.includeModelMetrics) ||
-  (step > 4 && job.includeModelMetrics);
+const shouldShow = (job: Job, step: number) =>{
+  return (step > 2 && !job.includeModelMetrics) ||
+    (step > 2 && job.includeModelMetrics)
+};
 const prompt = (_job: Job) => "Select your file";
 const tooltip = (_job: Job) => "You'll need to provide some additional information about your file before submitting.";
 
@@ -348,6 +349,7 @@ const DestinationFileUploadSection = {
   shouldShow,
   prompt,
   tooltip,
+  name:"DestationFileUploadSection"
 };
 
 export default DestinationFileUploadSection;

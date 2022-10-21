@@ -5,7 +5,8 @@ import { CalculationSettings, JobParams, ODFileDetails } from "../Types/types";
 const BASE_URL = "https://7kng2w0ibk.execute-api.us-east-2.amazonaws.com"
 
 
-const validateJob =(job:Job, destinationFile?:File, populationFile?:File)=>{
+export const validateJob =(job:Job)=>{
+  const {destinationFile, populationFile } = job
   let isValid = true 
   // Check to see if we have the right columns set in destinatons using points
   if( job.destinationFormat === 'point' && !(job.destLatCol && job.destLngCol)){
@@ -29,7 +30,7 @@ const validateJob =(job:Job, destinationFile?:File, populationFile?:File)=>{
     }
   }
 
-  return isValid && destinationFile
+  return isValid && (job.destinationFile !== null  || job.destinationFile !== undefined)
 }
 
 async function sleep(ms: number) {
@@ -70,14 +71,12 @@ const uploadFileToPresigned = async (file: File,urlDetails:{url: string, fields:
 
 export const useJobRunner = (
   job: Job,
-  destinationFile?: File,
-  populationFile?:File 
 ) => {
   const [error, setError] = useState<Error | null>(null);
   const [jobResultUrl, setJobResultUrl] = useState<any| null>(null);
   const [status, setStatus] = useState<string>('pending')
 
-  const isValid = validateJob(job, destinationFile, populationFile)
+  const isValid = validateJob(job)
 
   const run = useCallback(()=>{
     
@@ -86,11 +85,11 @@ export const useJobRunner = (
       const jobResponse = await jobReply.json()
       const jobId = jobResponse.job.id
       const {destination_upload_url, population_upload_url} = jobResponse
-      await uploadFileToPresigned(destinationFile!, destination_upload_url)
+      await uploadFileToPresigned(job.destinationFile!, destination_upload_url)
 
       if((job.includeModelMetrics) && job.populationSource === "custom"){
         setStatus("Uploading Population File")
-        await uploadFileToPresigned(populationFile!, population_upload_url)
+        await uploadFileToPresigned(job.populationFile!, population_upload_url)
         await fetch(population_upload_url.url, {method:"POST", body:JSON.stringify(population_upload_url.fields)})
       }
       
@@ -110,7 +109,7 @@ export const useJobRunner = (
 
     })()
 
-  },[job,destinationFile,populationFile])
+  },[job])
 
 
 

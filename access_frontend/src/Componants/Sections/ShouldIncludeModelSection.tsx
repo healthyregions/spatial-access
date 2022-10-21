@@ -58,6 +58,7 @@ const ShouldIncludeModelSection = {
     shouldShow,
     prompt,
     tooltip,
+    name:"ShouldIncludeModelSection"
 };
 
 export default ShouldIncludeModelSection;

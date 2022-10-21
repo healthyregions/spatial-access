@@ -2,6 +2,9 @@ import { Button, Typography } from "@mui/material";
 import React from "react";
 import {Job} from '../../Types/Job'
 import { useJobRunner } from "../../Hooks/useJobRunner";
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+
 
 interface JobRunnerProps {
   job: Job;
@@ -11,11 +14,9 @@ interface JobRunnerProps {
 
 export const JobRunner: React.FC<JobRunnerProps> = ({
   job,
-  destinationFile,
-  populationFile
 }) => {
 
-  const { result, error, run, status, isValid} = useJobRunner(job, destinationFile,populationFile);
+  const { result, error, run, status, isValid} = useJobRunner(job);
   return (
     <>
       {status ==='pending' &&
@@ -25,10 +26,16 @@ export const JobRunner: React.FC<JobRunnerProps> = ({
         <Typography sx={{color:"red"}}>{error.message}</Typography>
       }
       {status === 'done' && result &&
-        <a href={result.result_url}>Download Results</a>
+        <a href={result.result_url} style={{textDecoration:"none"}}>
+          <Button variant={"contained"}>
+            Download Results
+            </Button>
+          </a>
       }
-      {!result && !error &&
-        <Typography >{status}</Typography>
+      {status === 'running' && 
+        <Box sx={{'display':'flex'}}>
+          <CircularProgress />
+        </Box>
       }
     </>
   );

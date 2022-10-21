@@ -52,6 +52,7 @@ const TravelModeSection = {
     shouldShow,
     prompt,
     tooltip,
+    name:"TravelModeSection"
 };
 
 export default TravelModeSection;
