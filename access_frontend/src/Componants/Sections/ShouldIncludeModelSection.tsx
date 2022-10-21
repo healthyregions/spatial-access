@@ -41,7 +41,9 @@ const ShouldIncludeModelSectionDescription: React.FC<{job: Job}> = ({job}) => {
                  <li>Average travel time (in minutes) to resources. </li>
                  <li>Count of resources within max travel time selected.</li>
                </ul>
-              In addition, we can also calculate an advanced access metric. Additional data and parameter specifications may be required.
+              In addition, we can also calculate an advanced access metric based on a <b>gravity model</b>.
+              Gravity models take into account demand for resources, including how interest in accessing a resources 
+              diminishes the further away it is, as well as the capacity of providers. Additional data and parameter specifications may be required.
 
 
         </Typography>
