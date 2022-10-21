@@ -51,7 +51,7 @@ const PopulationDataSectionComponent: React.FC<SectionComponentSpec> = ({
 const PopulationDataSectionDescription: React.FC<{ job: Job }> = ({ job }) => {
   return (
     <Typography variant="body1">
-      To calculate a gravity or access model we need some measure of the
+      To calculate an advanced access metric we need some measure of the
       population at each origin. You can upload your own datafile with a custom
       population or choose ot use values from the US Census.
     </Typography>
