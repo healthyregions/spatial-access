@@ -44,7 +44,7 @@ const ModelSelectionSectionComponent: React.FC<
 const AdditionalDescription: React.FC<{job:Job}> = ({job}) => {
     return (
         <Typography>
-            This is an advanced setting. We provide multiple different access models, but most users will not need to change this setting.
+            This is an advanced setting. We provide multiple different access gravity models as our advanced metric, but most users will not need to change this setting.
         </Typography>
     )
 }

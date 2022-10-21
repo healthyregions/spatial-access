@@ -19,7 +19,7 @@ const CapacitySelectionSectionComponent: React.FC<SectionComponentSpec> = ({
     <>
     <FormControl>
       <RadioGroup
-        aria-label="Do you want to specify the capacity of each destination?"
+        aria-label="Do you want to specify the capacity of each resource?"
         value={!!useCapacity}
         name="INCLUDE-MODEL-METRICS"
         onChange={(_e, val) => {
@@ -29,12 +29,12 @@ const CapacitySelectionSectionComponent: React.FC<SectionComponentSpec> = ({
         <FormControlLabel
           value={true}
           control={<Radio />}
-          label="Yes, I have data on the capacity of each destination."
+          label="Yes, I have data on the capacity of each resource."
         />
         <FormControlLabel
           value={false}
           control={<Radio />}
-          label="No, assume each destination has equal capacity."
+          label="No, assume each resource has equal capacity."
         />
       </RadioGroup>
     </FormControl>
@@ -55,7 +55,7 @@ const CapacitySelectionSectionDescription: React.FC<{ job: Job }> = ({
   return (
     <Typography variant="body1">
       By default, we will assume that each location has an equal capacity to
-      serve your community. If you have data on the capacity of each
+      serve your community. If you have data on the capacity of each resource
       destination, like the number of hospital beds or staff members, this data
       can be used to more accurately model demand.
     </Typography>
@@ -66,7 +66,7 @@ const canProgress = (job: Job) => true;
 const shouldShow = (job: Job, step: number) =>
   step > 1 && job.includeModelMetrics;
 const prompt = (job: Job) =>
-  "Do you want to specify the capacity of each destination?";
+  "Do you want to specify the capacity of each resource?";
 const tooltip = (job: Job) =>
   "Providing data on the capacity of each destination may more accurately reflect the access score calculated.";
 
