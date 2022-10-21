@@ -60,6 +60,7 @@ const ModelSelectionSection = {
     shouldShow,
     prompt,
     tooltip,
+    name:"ModelSelectionSection"
 };
 
 export default ModelSelectionSection;

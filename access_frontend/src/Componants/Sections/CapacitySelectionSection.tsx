@@ -77,6 +77,7 @@ const CapacitySelectionSection = {
   shouldShow,
   prompt,
   tooltip,
+  name:"CapacitySelectionSection"
 };
 
 export default CapacitySelectionSection;

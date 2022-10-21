@@ -72,6 +72,7 @@ const PopulationDataSection = {
   shouldShow,
   prompt,
   tooltip,
+  name:"PopulationDataSection"
 };
 
 export default PopulationDataSection;

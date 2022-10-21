@@ -51,6 +51,7 @@ const GeomUnitSection = {
   shouldShow,
   prompt,
   tooltip,
+  name:"GeomUnitSection"
 };
 
 export default GeomUnitSection;

@@ -3,6 +3,7 @@ export type DestinationFormat = "point" | "admin";
 export type Geom = "tract" | "zip";
 export type PopulationSource = "census" | "custom";
 export type ModelType = "RAMM" | "2FC";
+export type OutputFormat = "GeoJSON" | "ShapeFile" | "CSV"
 
 // Destinations are the resources, which we are calculating the access to
 // Sources are the population centers on either zip or census tract level how are trying
@@ -57,4 +58,5 @@ export interface Job {
   weights?: Record<string, number>;
   destinationFile?: File;
   populationFile?: File;
+  outputFormat?: OutputFormat;
 }

@@ -1,8 +1,7 @@
 import React from "react";
 import {
   FormControl,
-  Radio,
-  RadioGroup,
+  Radio, RadioGroup,
   FormControlLabel,
   Typography,
 } from "@mui/material";
@@ -64,6 +63,7 @@ const WeightSelectionSection = {
   shouldShow,
   prompt,
   tooltip,
+  name:"WeightSelectionSection"
 };
 
 export default WeightSelectionSection;
