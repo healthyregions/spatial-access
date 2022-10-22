@@ -53,10 +53,20 @@ const tooltip = (_job: Job) =>
   "This determines the threshold for the maximum travel time to access a destination.";
 
 
+const TravelTimeDescription: React.FC<{job: Job}> = ({job}) => {
+    return (
+        <Typography variant='body1'>
+              How often do people access this resource -- every day, week, or month? If accessed less often,
+              people may be more likely to travel further. Select the <i>maximum</i> travel time, as results will be limited by this threshold.
+        </Typography>
+    )
+}
+
 
 
 const TravelTimeSection = {
   component: TravelTimeComponent,
+  additionalDescription: TravelTimeDescription,
   canProgress,
   shouldShow,
   prompt,
