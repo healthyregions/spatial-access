@@ -161,10 +161,10 @@ export const DestinationFileSelection: React.FC<
           Please select a csv file containing your destinations with the
           following columns
           <ul>
-            <li>A column which has a unique id for each destination</li>
+            <li>A column which has a unique id for each resource destination</li>
             {job.destinationFormat === "point" ? (
               <>
-                <li>A column containig the latitude</li>
+                <li>A column containing the latitude</li>
                 <li>A column containing the longitude</li>
               </>
             ) : (
@@ -178,7 +178,7 @@ export const DestinationFileSelection: React.FC<
             {job.useCapacity && (
               <li>
                 A column indicating the number of people the destination can
-                accomidate
+                accommodate
               </li>
             )}
             {job.useCategory && (

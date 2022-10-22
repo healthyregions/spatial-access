@@ -52,9 +52,10 @@ const DestinationInputFormatSectionComponent: React.FC<
 const AdditionalDescription: React.FC<{ job: Job }> = ({ job }) => {
   return (
     <Typography>
-      In your data with destinations, each row a different location. You can
-      either provide a latitude and longitude column or use a column with a{" "}
-      {job.geom === "tract" ? "census tract id" : "zip code"}.
+      In your dataset with resource destinations, each row should represent a different location. You can
+      either provide a latitude and longitude column, or use a column with a{" "}
+      {job.geom === "tract" ? "census tract id" : "zip code"}. <i>Tip:</i> Use the 10-digit id code for tracts,
+      or 5-digit ZCTA code for zip codes.
     </Typography>
   );
 };
@@ -62,7 +63,7 @@ const canProgress = (_job: Job) => true;
 const shouldShow = (job: Job, step: number) =>
   (step > 1 && !job.includeModelMetrics) ||
   (step > 3 && job.includeModelMetrics);
-const prompt = (_job: Job) => "What is the format of your destinations?";
+const prompt = (_job: Job) => "What is the data format of your resource destinations?";
 const tooltip = (_job: Job) =>
   "For point data, your latitude and longitude columns should be in the WGS84/EPSG:4326 projection.";
 
