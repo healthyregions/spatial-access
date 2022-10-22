@@ -34,8 +34,8 @@ const TravelModeSectionComponent: React.FC<
                 }}
               >
                 <MenuItem value={"walk"}>Walking</MenuItem>
-                <MenuItem value={"car"}>Driving</MenuItem>
                 <MenuItem value={"bike"}>Biking</MenuItem>
+                <MenuItem value={"car"}>Driving</MenuItem>
               </Select>
             </FormControl>
       </FormGroup>
