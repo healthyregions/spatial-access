@@ -25,7 +25,7 @@ const GeomUnitSectionComponent: React.FC<SectionComponentSpec> = ({
   return (
     <FormGroup>
       <FormControl fullWidth>
-        <InputLabel id="travel-mode-label">Target Geometry</InputLabel>
+        <InputLabel id="travel-mode-label">Target Area</InputLabel>
         <Select
           labelId="travel-mode-label"
           id="tarvel-mode"
