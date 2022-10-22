@@ -6,6 +6,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Typography
 } from "@mui/material";
 import {TravelMode,Job} from '../../Types/Job'
 import { SectionComponentSpec } from "../../App";
@@ -41,6 +42,15 @@ const TravelModeSectionComponent: React.FC<
   );
 };
 
+const TravelModeSectionDescription: React.FC<{job: Job}> = ({job}) => {
+    return (
+        <Typography variant='body1'>
+              Or more specifically, how do people access the resource of interest? 
+              Are they more likely to walk, bike, or drive? 
+        </Typography>
+    )
+}
+
 const canProgress = (_job: Job) => true;
 const shouldShow = (_job: Job, _step: number) => true;
 const prompt = (_job: Job) => "How does your community get around?";
@@ -48,6 +58,7 @@ const tooltip = (_job: Job) => "This determines the travel cost matrices used in
 
 const TravelModeSection = {
     component: TravelModeSectionComponent,
+    additionalDescription: TravelModeSectionDescription,
     canProgress,
     shouldShow,
     prompt,

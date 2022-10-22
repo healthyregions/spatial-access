@@ -42,11 +42,18 @@ const TravelTimeComponent: React.FC<SectionComponentSpec> = ({
   );
 };
 
+
 const canProgress = (_job: Job) => true;
 const shouldShow = (_job: Job, _step: number) => true;
 const prompt = (_job: Job) => "How long is your community willing to travel?";
+
+
+
 const tooltip = (_job: Job) =>
   "This determines the threshold for the maximum travel time to access a destination.";
+
+
+
 
 const TravelTimeSection = {
   component: TravelTimeComponent,
