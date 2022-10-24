@@ -23,12 +23,12 @@ export const Section: React.FC<PropsWithChildren<SectionProps>> = ({
         backgroundColor: variant==='dark' ? "#F3F3F3" : "inherit",
       }}
     >
-      <Box sx={{ padding: "20px", width: "50%" }}>
-        <Typography variant="h4" sx={{color: variant==='dark' ?"inherit" :"red", fontWeight:100 }}>{title}</Typography>
+      <Box sx={{ padding: "20px" }}>
+        <Typography variant="h4" sx={{color: "#373a3c", fontWeight:100 }}>{title}</Typography>
 
         {imageUrl && <img src={imageUrl} alt="compute parameter icon" />}
       </Box>
-      <Box sx={{ padding: "20px", width: "50%" }}>{children}</Box>
+      <Box sx={{ padding: "20px" }}>{children}</Box>
     </Box>
   );
 };

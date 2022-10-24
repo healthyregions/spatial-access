@@ -53,7 +53,7 @@ const CapacitySelectionSectionDescription: React.FC<{ job: Job }> = ({
   job,
 }) => {
   return (
-    <Typography variant="body1">
+    <Typography variant="body1" color="#373a3c">
       By default, we will assume that each location has an equal capacity to
       serve your community. If you have data on the capacity of each resource
       destination, like the number of hospital beds or staff members, this data

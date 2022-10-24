@@ -14,45 +14,28 @@ import {
 import { createTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar"; import Typography from "@mui/material/Typography";
 import CssBaseline from "@mui/material/CssBaseline";
-// import { CalculationSettings, ODFileDetails } from "./types";
-// import { CalculationParametersSection } from "./Componants/Sections/CalculationParametersSection";
-// import { UploadODFileSection } from "./UploadODFileSection";
-// import { JobRunner } from "./JobRunner";
 import { Job } from "./Types/Job";
-// import { DestinationsStep } from "./Componants/Sections/DestinationsStep";
-// import { AdditionalMetricsStep } from "./Componants/Sections/AdditionalMetrics";
-// import { FileSelection } from "./Componants/Sections/FileSelection";
 
 // sections
-import TravelModeSection from "./Componants/Sections/TravelModeSection";
-import GeomUnitSection from "./Componants/Sections/GeomUnitSection";
-import TravelTimeSection from "./Componants/Sections/TravelTimeSection";
+import TravelModeSection from "./Components/Sections/TravelModeSection";
+import GeomUnitSection from "./Components/Sections/GeomUnitSection";
+import TravelTimeSection from "./Components/Sections/TravelTimeSection";
 
 // icons
 import InfoIcon from "@mui/icons-material/Info";
-import ShouldIncludeModelSection from "./Componants/Sections/ShouldIncludeModelSection";
-import PopulationDataSection from "./Componants/Sections/PopulationDataSection";
-import CapacitySelectionSection from "./Componants/Sections/CapacitySelectionSection";
-import CategorySelectionSection from "./Componants/Sections/CategorySelectionSection";
-import WeightSelectionSection from "./Componants/Sections/WeightSelectionSection";
-import ModelSelectionSection from "./Componants/Sections/ModelSelectionSection";
-import DestinationInputFormatSection from "./Componants/Sections/DestinationsInputFormatSection";
-import DestinationFileUploadSection from "./Componants/Sections/DestinationFileUploadSection";
-import OutputFormatSection from "./Componants/Sections/OutputFormatSection"
-import JobRunnerSection from './Componants/Sections/JobRunnerSection'
+import ShouldIncludeModelSection from "./Components/Sections/ShouldIncludeModelSection";
+import PopulationDataSection from "./Components/Sections/PopulationDataSection";
+import CapacitySelectionSection from "./Components/Sections/CapacitySelectionSection";
+import CategorySelectionSection from "./Components/Sections/CategorySelectionSection";
+import WeightSelectionSection from "./Components/Sections/WeightSelectionSection";
+import ModelSelectionSection from "./Components/Sections/ModelSelectionSection";
+import DestinationInputFormatSection from "./Components/Sections/DestinationsInputFormatSection";
+import DestinationFileUploadSection from "./Components/Sections/DestinationFileUploadSection";
+import OutputFormatSection from "./Components/Sections/OutputFormatSection"
+import JobRunnerSection from './Components/Sections/JobRunnerSection'
+import {themeOptions} from './theme'
 
-const theme = createTheme({
-  palette: {
-    //@ts-ignore
-    type: "light",
-    primary: {
-      main: "#FF5757",
-    },
-    secondary: {
-      main: "#f50057",
-    },
-  },
-});
+const theme = createTheme(themeOptions);
 
 export interface SectionComponentSpec {
   job: Job;
@@ -141,8 +124,8 @@ function App() {
           {ActiveSections.map((section, i) => (
             <>
               <Grid item xs={12} md={6} lg={6} className="fade-in" spacing={12}>
-                <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{mr: 2, mb: 4}}>
-                  <Typography variant="h5" fontWeight="bold">
+                <Stack direction="row" spacing={1} alignItems="flex-start" justifyContent="space-between"  sx={{mr: 2, mb: 4}}>
+                  <Typography variant="h4" fontWeight="bold" color="#373a3c">
                     {section.prompt(job)}
                   </Typography>
                   <Tooltip title={section.tooltip(job)}>
@@ -153,7 +136,7 @@ function App() {
                 </Stack>
                 {!!section.additionalDescription && section.additionalDescription({job})}
               </Grid>
-              <Grid item xs={12} md={6} lg={6} className="fade-in">
+              <Grid item xs={12} md={6} lg={6} className="fade-in" sx={{width:"100%"}}>
                 {section.component({ job, onUpdate: handleUpdate })}
               </Grid>
             </>
