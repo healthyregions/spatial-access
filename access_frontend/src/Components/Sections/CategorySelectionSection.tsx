@@ -5,6 +5,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Typography,
+  Box,
 } from "@mui/material";
 import { Job } from "../../Types/Job";
 import { SectionComponentSpec } from "../../App";
@@ -16,7 +17,7 @@ const CategorySelectionSectionComponent: React.FC<SectionComponentSpec> = ({
   const { useCategory } = job;
 
   return (
-    <>
+    <Box sx={{width:"100%"}}>
       <FormControl>
         <RadioGroup
           aria-label="Do you have multiple categories of destinations you would like to separately calculate access for?"
@@ -46,7 +47,7 @@ const CategorySelectionSectionComponent: React.FC<SectionComponentSpec> = ({
           </i>
         </Typography>
       )}
-    </>
+    </Box>
   );
 };
 

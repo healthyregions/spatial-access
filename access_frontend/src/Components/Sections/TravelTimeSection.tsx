@@ -29,6 +29,7 @@ const TravelTimeComponent: React.FC<SectionComponentSpec> = ({
           formatTime(minutes)
         }
         valueLabelDisplay="auto"
+        sx={{width:"100%"}}
         min={9}
         max={90}
         step={1}

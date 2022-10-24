@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from "react";
-import { Stack, Grid, FormGroup, Button, Typography } from "@mui/material";
+import { Stack, Grid, FormGroup, Button, Typography, Box } from "@mui/material";
 import { Job } from "../../Types/Job";
 import { SectionComponentSpec } from "../../App";
 import { useDropzone } from "react-dropzone";
@@ -61,9 +61,9 @@ export const PopulationFileSelection: React.FC<
 
   if (!file) {
     return (
-      <section style={{ marginBottom: "20px" }}>
+      <Box sx={{ marginBottom: "20px", width:"100%" }}>
         <Typography variant="h5">Population File</Typography>
-        <Typography variant="body1">
+        <Typography variant="body1" color="#373a3c" >
           Please select a csv file containing your population estimates
           <ul>
             <li>
@@ -78,13 +78,13 @@ export const PopulationFileSelection: React.FC<
           {isDragActive ? "Drop here" : "Select Population File"}
           <input type="file" hidden {...getInputProps()} />
         </Button>
-      </section>
+      </Box>
     );
   }
 
   return (
-    <section style={{ marginBottom: "20px" }}>
-      <FormGroup sx={{ display: "flex", flexDirection: "column" }}>
+    <Box sx={{ marginBottom: "20px", width:"100%" }}>
+      <FormGroup sx={{ display: "flex", flexDirection: "column", width:"100%" }}>
         <Grid container direction={"column"} spacing={3}>
           {file && (
             <Grid item>
@@ -118,7 +118,7 @@ export const PopulationFileSelection: React.FC<
           </Grid>
         </Grid>
       </FormGroup>
-    </section>
+    </Box>
   );
 };
 
@@ -155,7 +155,7 @@ export const DestinationFileSelection: React.FC<
 
   if (!file) {
     return (
-      <section style={{ marginBottom: "20px" }}>
+      <Box sx={{ marginBottom: "20px" }}>
         <Typography variant="h5">Destination File</Typography>
         <Typography variant="body1">
           Please select a csv file containing your destinations with the
@@ -195,7 +195,7 @@ export const DestinationFileSelection: React.FC<
           {isDragActive ? "Drop here" : "Select Destination File"}
           <input type="file" hidden {...getInputProps()} />
         </Button>
-      </section>
+      </Box>
     );
   }
 

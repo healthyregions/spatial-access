@@ -51,7 +51,7 @@ const DestinationInputFormatSectionComponent: React.FC<
 
 const AdditionalDescription: React.FC<{ job: Job }> = ({ job }) => {
   return (
-    <Typography>
+    <Typography variant='body1'>
       In your dataset with resource destinations, each row should represent a different location. You can
       either provide a latitude and longitude column, or use a column with a{" "}
       {job.geom === "tract" ? "census tract id" : "zip code"}. <i>Tip:</i> Use the 10-digit id code for tracts,
