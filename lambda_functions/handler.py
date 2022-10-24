@@ -19,19 +19,23 @@ def create_job(event,context):
     mode= body['mode'] if 'mode' in body else 'walk'
     geom= body['geom'] if 'geom' in body else 'tract'
     threshold= body['threshold'] if 'threshold' in body else 30
-    includeGravityModel= body['includeGravityModel'] if 'includeGravityModel' in body else False
-    includeAccessModel= body['includeAccessModel'] if 'includeAccessModel' in body else False
+    includeModelMetrics= body['includeModelMetrics'] if 'includeModelMetrics' in body else False
+    modelType = body['modelType'] if 'modelType' in body else False
     populationSource= body['populationSource'] if "populationSource" in body else "census"
     sourcePopulationColumn= body['sourcePopulationColumn'] if "sourcePopulationColumn" in body else None
     sourceIdColumn= body['sourceIdColumn'] if "sourceIdColumn" in body else None
-    destIdCol= body['destIdCol'] if "destIdCol" in body else "id"
     destLatCol= body['destLatCol'] if "destLatCol" in body else "Latitude"
     destLngCol= body['destLngCol'] if "destLngCol" in body else "Longitude"
     destAdminCol= body['admin'] if "admin" in body else None
+    useCapacity= body['useCapacity'] if "useCapacity" in body else False 
     destinationFormat = body['destinationFormat'] if "destinationFormat" in body else "point" 
+    useWeights= body['useWeights'] if "useWeights" in body else "point" 
+    useCategory= body['useCategory'] if "useCategory" in body else "point" 
+    weights = body["weights"] if "weights" in body else "weights"
+
     categoryColumn = body['categoryColumn'] if "categoryColumn" in body else None
     capacityColumn= body['capacityColumn'] if "capacityColumn" in body else None
-    weightColumn= body['weightColumn'] if "weightColumn" in body else None
+    outputFormat = body['outputFormat'] if 'outputFormat' in body else "GeoJSON"
 
     job_id  = uuid4()
 
@@ -39,19 +43,22 @@ def create_job(event,context):
         "mode": mode,
         "geom": geom,
         "threshold": threshold,
-        "includeGravityModel": includeGravityModel,
-        "includeAccessModel": includeAccessModel,
+        "includeModelMetrics": includeModelMetrics,
+        "modelType": modelType,
         "populationSource":  populationSource,
         "sourcePopulationColumn": sourcePopulationColumn,
         "sourceIdColumn": sourceIdColumn,
-        "destIdCol": destIdCol,
         "destLatCol": destLatCol,
         "destLngCol": destLngCol,
         "destAdminCol": destAdminCol,
-        "destinationFormat ": destinationFormat, 
+        "destinationFormat ": destinationFormat,
+        "useWeights":useWeights,
+        "useCategory":useCategory,
+        "useCapacity": useCapacity,
         "categoryColumn ": categoryColumn,
         "capacityColumn": capacityColumn,
-        "weightColumn": weightColumn,
+        "weights": weights,
+        "outputFormat": outputFormat,
         "status":"pending",
         "id": str(job_id)
     }
