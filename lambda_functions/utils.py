@@ -3,6 +3,9 @@ import json
 from botocore.exceptions import ClientError
 import os
 from access_logging import logger
+import tempfile 
+import shutil
+
 
 BUCKET = os.environ["ACCESS_BUCKET"]
 PATH   = os.environ["ACCESS_PATH"]
@@ -27,9 +30,30 @@ def save_result(result,job):
 
     job_id = job["id"]
     job_folder =f"{PATH}/{job_id}" 
-    result_file = f"{job_folder}/result.csv"
-    resultObject = s3.Object(BUCKET,result_file)
-    resultObject.put(Body=bytes(result.to_csv().encode('UTF-8'))) 
+    outFormat = job["outputFormat"]
+
+    if(outFormat == "CSV"):
+        result_file = f"{job_folder}/result.csv"
+        resultObject = s3.Object(BUCKET,result_file)
+        resultObject.put(Body=bytes(result.to_csv().encode('UTF-8'))) 
+    elif(outFormat=="GeoJSON"):
+        result_file = f"{job_folder}/result.geojson"
+        resultObject = s3.Object(BUCKET,result_file)
+        resultObject.put(Body=bytes(result.to_json().encode('UTF-8'))) 
+    elif(outFormat=='ShapeFile'):
+        result_file = f"{job_folder}/result.zip"
+        resultObject = s3.Object(BUCKET,result_file)
+        dirpath = tempfile.mkdtemp()
+        filename = f"{dirpath}/result.zip"
+        result.toFile(filename)
+        s3.upload_file(filename,BUCKET,result_file)
+        shutil.rmtree(dirpath)
+
+
+    else:
+        raise Exception("File type not supported")
+
+
     return create_presigned_get_url(BUCKET,result_file,expiration=86400)
 
 def check_for_destination_file(job):
