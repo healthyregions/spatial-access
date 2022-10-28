@@ -137,7 +137,7 @@ function App() {
       <CssBaseline />
 
       <Box sx={{ display: "flex" }}>
-        <AppBar position="static" sx={{ padding: "20px 0px 10px 10px" }}>
+        <AppBar sx={{ padding: "20px 0px 10px 10px"}} position={"fixed"}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Spatial Access
@@ -183,6 +183,7 @@ function App() {
       <Box
         sx={{
           paddingBottom: "200px",
+          marginTop:"70px",
           px: 3,
           boxSizing: "border-box",
         }}
@@ -195,6 +196,7 @@ function App() {
           sx={{ margin: "auto" }}
           rowSpacing={10}
           columnSpacing={2}
+
         >
               <Grid item xs={12} md={6} lg={6} className="fade-in" spacing={12} textAlign='center'>
                 <img src="/calculate_pic.png" alt="A graphic denoting calculation"  /> 
