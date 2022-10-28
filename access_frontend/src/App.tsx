@@ -4,12 +4,21 @@ import "./App.css";
 import {
   Box,
   Button,
+  Divider, Drawer,
   Grid,
   IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
   Stack,
   ThemeProvider,
+  Toolbar,
   Tooltip,
 } from "@mui/material";
+
+import MenuIcon from '@mui/icons-material/Menu';
+
 
 import { createTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar"; import Typography from "@mui/material/Typography";
@@ -93,17 +102,83 @@ function App() {
   );
   const canProgress = ActiveSections.slice(-1)[0].canProgress(job);
 
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const navItems = [  {name: 'About', url : ""}, {name: 'Methodology', url : ""}, {name:'Contact', url:""} ];
+
+
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+      <Typography variant="h6" sx={{ my: 2 }}>
+        Spatial Accesss Calculator 
+      </Typography>
+      <Divider />
+      <List>
+        {navItems.map((item) => (
+          <ListItem key={item.name} disablePadding>
+            <ListItemButton sx={{ textAlign: 'center' }}>
+              <ListItemText primary={item.name} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
+
+  const container = window !== undefined ? () => document.body : undefined;
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
       <Box sx={{ display: "flex" }}>
         <AppBar position="static" sx={{ padding: "20px 0px 10px 10px" }}>
+        <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Calculate Spatial Access and Coverage
+            Spatial Access
           </Typography>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
+          >
+            <MenuIcon/>
+          </IconButton>
+          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+            {navItems.map((item) => (
+              <Button key={item.name} sx={{ color: '#fff' }}>
+                {item.name}
+              </Button>
+            ))}
+          </Box>
+        </Toolbar>
+          <Box component="nav">
+            <Drawer
+              container={container}
+              variant="temporary"
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
+              sx={{
+                display: { xs: 'block', sm: 'none' },
+                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240},
+              }}
+            >
+              {drawer}
+            </Drawer>
+          </Box>
         </AppBar>
       </Box>
+
 
       <Box
         sx={{
@@ -121,6 +196,16 @@ function App() {
           rowSpacing={10}
           columnSpacing={2}
         >
+              <Grid item xs={12} md={6} lg={6} className="fade-in" spacing={12} textAlign='center'>
+                <img src="/calculate_pic.png" alt="A graphic denoting calculation"  /> 
+              </Grid>
+              <Grid item xs={12} md={6} lg={6} className="fade-in" sx={{width:"100%"}}>
+                <Typography variant='body1'>
+                Welcome to the Acces App. You can use this web page to calculate access to resources based on different transit modes.
+                The application will ask you a series of questions and based on those answers it will then ask you to upload a couple of files 
+                describing the resources you are interested in. 
+                  </Typography>
+              </Grid>
           {ActiveSections.map((section, i) => (
             <>
               <Grid item xs={12} md={6} lg={6} className="fade-in" spacing={12}>
