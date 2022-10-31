@@ -86,7 +86,9 @@ def process_job(event,context):
 
             logger.info("Running metrics")
             # run metrics
-            result = access_parser.run_all_metrics()
+            
+            model = job['modelType']
+            result = access_parser.run_all_metrics(job['modelType'])
 
             logger.info("Saving result")
 

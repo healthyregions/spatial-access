@@ -244,6 +244,31 @@ class AccessMetricParser:
                       cost_name    = self.matrix_travel_cost_col
                     )
         return self.access
+
+
+    def analyze_raam(self,initialize_access=False) -> pd.DataFrame:
+        if (initialize_access):
+            self.initialize_access()
+          
+        if self.access is None:
+            print('Error - initialize access with .initialize_access() or pass initialize_access=True to analyize_gravity')
+            return None
+
+        result = self.access.raam(tau=30)
+        return result.reset_index()
+
+
+
+    def analyze_2SFC(self, initialize_access=False) -> pd.DataFrame:
+        if (initialize_access):
+            self.initialize_access()
+          
+        if self.access is None:
+            print('Error - initialize access with .initialize_access() or pass initialize_access=True to analyize_gravity')
+            return None
+
+        result = self.access.two_stage_fca(name="2sfca")
+        return result.reset_index()
     
     def analyze_gravity(self, initialize_access=False) -> pd.DataFrame: 
         if (initialize_access):
@@ -259,16 +284,23 @@ class AccessMetricParser:
         
         return gravity_result
     
-    def run_all_metrics(self) -> pd.DataFrame:
+    def run_all_metrics(self, withModel=None) -> pd.DataFrame:
         ttn = self.analyze_nearest()
         cwt = self.analyze_count_in_threshold()
-        grav = self.analyze_gravity(initialize_access=True)
+        if withModel:
+            if(model=='raam'):
+                modelResult = self.analyze_raam(initialize_access=True)
+            elif(model=='2fca'):
+                modelResult = self.analyze_2SFC(initialize_access=True)
 
-        return self.geographies \
+        result =self.geographies \
             .merge(ttn, how="left", left_on=self.geo_join_col, right_on=self.matrix_join_col_o) \
-            .merge(cwt, how="left", left_on=self.geo_join_col, right_on=self.matrix_join_col_o) \
-            .merge(grav, how="left", left_on=self.geo_join_col, right_on=self.geo_join_col) \
-            .drop(columns=[f"{self.matrix_join_col_o}_x", f"{self.matrix_join_col_o}_y"])
+            .merge(cwt, how="left", left_on=self.geo_join_col, right_on=self.matrix_join_col_o) 
+
+        if(model):
+            result = result.merge(modelResult, left_on=self.geo_join_col, right_on=self.matrix_join_col_o )
+
+        return result.drop(columns=[f"{self.matrix_join_col_o}_x", f"{self.matrix_join_col_o}_y"])
             
 
 def create_presigned_get_url(bucket_name, object_name, expiration=3600):
