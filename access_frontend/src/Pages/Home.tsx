@@ -106,7 +106,17 @@ function HomePage() {
           sx={{ margin: "auto" }}
           rowSpacing={10}
           columnSpacing={2}
-        >
+          >
+         <Grid item xs={12} md={6} lg={6} className="fade-in" spacing={12} textAlign='center'>
+                <img src="/calculate_pic.png" alt="A graphic denoting calculation"  /> 
+              </Grid>
+              <Grid item xs={12} md={6} lg={6} className="fade-in" sx={{width:"100%"}}>
+                <Typography variant='body1'>
+                Welcome to the Access App. You can use this web page to calculate access to resources based on different transit modes.
+                The application will ask you a series of questions and based on those answers it will then ask you to upload a couple of files 
+                describing the resources you are interested in. 
+                  </Typography>
+              </Grid>
           {ActiveSections.map((section, i) => (
             <>
               <Grid item xs={12} md={6} lg={6} className="fade-in" spacing={12}>
