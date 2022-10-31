@@ -2,5 +2,8 @@
   "dependencies": {
     "@mui/icons-material": "^5.10.9",
     "react-scripts": "^5.0.1"
+  },
+  "devDependencies": {
+    "serverless-python-requirements": "^5.4.0"
   }
 }
