@@ -43,6 +43,11 @@ import DestinationFileUploadSection from "./Components/Sections/DestinationFileU
 import OutputFormatSection from "./Components/Sections/OutputFormatSection"
 import JobRunnerSection from './Components/Sections/JobRunnerSection'
 import {themeOptions} from './theme'
+import { NavLink, Routes, Route, BrowserRouter} from "react-router-dom";
+
+import HomePage from "./Pages/Home"
+import AboutPage from "./Pages/About"
+import MethodologyPage from "./Pages/Methodlogy"
 
 const theme = createTheme(themeOptions);
 
@@ -108,7 +113,7 @@ function App() {
     setMobileOpen(!mobileOpen);
   };
 
-  const navItems = [  {name: 'About', url : ""}, {name: 'Methodology', url : ""}, {name:'Contact', url:""} ];
+  const navItems = [{name:'Home', url:"/"}, {name: 'About', url : "/about"}, {name: 'Methodology', url : "/method"} ];
 
 
   const drawer = (
@@ -120,9 +125,11 @@ function App() {
       <List>
         {navItems.map((item) => (
           <ListItem key={item.name} disablePadding>
+            <NavLink to={item.url}>
             <ListItemButton sx={{ textAlign: 'center' }}>
               <ListItemText primary={item.name} />
             </ListItemButton>
+          </NavLink>
           </ListItem>
         ))}
       </List>
@@ -135,6 +142,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <BrowserRouter>
 
       <Box sx={{ display: "flex" }}>
         <AppBar sx={{ padding: "20px 0px 10px 10px"}} position={"fixed"}>
@@ -153,9 +161,11 @@ function App() {
           </IconButton>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
+              <NavLink to={item.url} >
               <Button key={item.name} sx={{ color: '#fff' }}>
                 {item.name}
-              </Button>
+                </Button>
+                </NavLink>
             ))}
           </Box>
         </Toolbar>
@@ -178,74 +188,17 @@ function App() {
           </Box>
         </AppBar>
       </Box>
+      <Box sx={{marginTop:"120px"}}>
+      <Routes>
+        <Route path="/" element={(<HomePage />)}/>
+        <Route path="/about" element={(<AboutPage />)}/>
+        <Route path="/methodology" element={(<MethodologyPage />)}/>
+      </Routes>
+    </Box>
+      </BrowserRouter>
 
-
-      <Box
-        sx={{
-          paddingBottom: "200px",
-          marginTop:"70px",
-          px: 3,
-          boxSizing: "border-box",
-        }}
-      >
-        <Grid
-          container
-          direction="row"
-          maxWidth={"1200px"}
-          width="100%"
-          sx={{ margin: "auto" }}
-          rowSpacing={10}
-          columnSpacing={2}
-
-        >
-              <Grid item xs={12} md={6} lg={6} className="fade-in" spacing={12} textAlign='center'>
-                <img src="/calculate_pic.png" alt="A graphic denoting calculation"  /> 
-              </Grid>
-              <Grid item xs={12} md={6} lg={6} className="fade-in" sx={{width:"100%"}}>
-                <Typography variant='body1'>
-                Welcome to the Acces App. You can use this web page to calculate access to resources based on different transit modes.
-                The application will ask you a series of questions and based on those answers it will then ask you to upload a couple of files 
-                describing the resources you are interested in. 
-                  </Typography>
-              </Grid>
-          {ActiveSections.map((section, i) => (
-            <>
-              <Grid item xs={12} md={6} lg={6} className="fade-in" spacing={12}>
-                <Stack direction="row" spacing={1} alignItems="flex-start" justifyContent="space-between"  sx={{mr: 2, mb: 4}}>
-                  <Typography variant="h4" fontWeight="bold" color="#373a3c">
-                    {section.prompt(job)}
-                  </Typography>
-                  <Tooltip title={section.tooltip(job)}>
-                    <IconButton>
-                      <InfoIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Stack>
-                {!!section.additionalDescription && section.additionalDescription({job})}
-              </Grid>
-              <Grid item xs={12} md={6} lg={6} className="fade-in" sx={{width:"100%"}}>
-                {section.component({ job, onUpdate: handleUpdate })}
-              </Grid>
-            </>
-          ))}
-          {(ActiveSections[ActiveSections.length-1].name!=="JobRunnerSection") &&
-          <Grid item xs={12} sx={{textAlign:"right"}}>
-
-          <Button
-            sx={{ margin: "3rem auto" }}
-            size="large"
-            onClick={() => setStep(prev => prev + 1)}
-            variant="contained"
-            disabled={!canProgress}
-            >
-            Next
-          </Button>
-          </Grid>
-          }
-        </Grid>
-      </Box>
-    </ThemeProvider>
-  );
+      </ThemeProvider>
+      )
 }
 
 export default App;

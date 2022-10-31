@@ -1,11 +1,11 @@
 
-import {Box, Typography} from '@mui/material'
+import {Stack, Typography} from '@mui/material'
 
 
 export default function MethodologyPgage(){
   
   return (
-    <Box>
+    <Stack sx={{padding:"0px 20px"}} gap="20px">
       <Typography variant='h3'>About</Typography>
       <Typography variant='body1'>
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus pretium, diam sit amet gravida condimentum, purus massa efficitur neque, id consequat nisi nibh non orci. Mauris in augue aliquam, accumsan augue at, fringilla turpis. Pellentesque nisi sem, congue sit amet orci id, hendrerit egestas odio. Donec aliquet molestie dolor malesuada porttitor. Cras vehicula justo dolor, non fermentum metus feugiat vel. Nulla faucibus ligula non urna pellentesque, vel tristique augue iaculis. Aenean a leo congue, condimentum quam convallis, accumsan risus. Nulla congue nibh sed mauris ullamcorper volutpat. Vestibulum in libero sit amet tellus scelerisque mattis. Vestibulum maximus nunc felis, nec rutrum neque pellentesque id. Duis accumsan eget mi sed vehicula. Phasellus non vestibulum ligula. Vestibulum vestibulum iaculis nisl a tempor. Aenean semper sagittis massa non placerat. Praesent vel dui tincidunt, ultrices sem tempor, malesuada mi.
@@ -30,7 +30,7 @@ Morbi dictum augue nisi, feugiat mollis enim condimentum in. Etiam vel malesuada
 
 
       </Typography>
-    </Box>
+    </Stack>
   )
 
 }
