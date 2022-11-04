@@ -146,4 +146,6 @@ custom:
     dockerizePip: true
     zip: true # <- here! 
     strip: false
+    useDownloadCache: false
+    useStaticCache: false
     # slim: true
