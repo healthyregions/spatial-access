@@ -288,16 +288,16 @@ class AccessMetricParser:
         ttn = self.analyze_nearest()
         cwt = self.analyze_count_in_threshold()
         if withModel:
-            if(model=='raam'):
+            if(withModel=='raam'):
                 modelResult = self.analyze_raam(initialize_access=True)
-            elif(model=='2fca'):
+            elif(withModel=='2fca'):
                 modelResult = self.analyze_2SFC(initialize_access=True)
 
         result =self.geographies \
             .merge(ttn, how="left", left_on=self.geo_join_col, right_on=self.matrix_join_col_o) \
             .merge(cwt, how="left", left_on=self.geo_join_col, right_on=self.matrix_join_col_o) 
 
-        if(model):
+        if(withModel):
             result = result.merge(modelResult, left_on=self.geo_join_col, right_on=self.matrix_join_col_o )
 
         return result.drop(columns=[f"{self.matrix_join_col_o}_x", f"{self.matrix_join_col_o}_y"])
