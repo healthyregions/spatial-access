@@ -32,6 +32,7 @@ import DestinationInputFormatSection from "../Components/Sections/DestinationsIn
 import DestinationFileUploadSection from "../Components/Sections/DestinationFileUploadSection";
 import OutputFormatSection from "../Components/Sections/OutputFormatSection"
 import JobRunnerSection from '../Components/Sections/JobRunnerSection'
+import {useJob} from "../Hooks/useJob";
 
 
 export interface SectionComponentSpec {
@@ -66,29 +67,28 @@ const Sections: SectionSpec[] = [
 ];
 
 function HomePage() {
-  const [job, setJob] = useState<Job>({
-    mode: "car",
-    geom: "tract",
-    threshold: 30,
-    destinationFormat: "point",
-    includeModelMetrics: false,
-    populationSource: "census",
-  });
+  const {job,setJob} = useJob()
 
   const [step, setStep] = useState<number>(0);
   useLayoutEffect(() => {
     window.scrollTo(0, document.body.scrollHeight);
   }, [step]);
 
-  // SubmitSection,
-  // ResultSection
   const handleUpdate = (j: Partial<Job>) => {
-    setJob({ ...job, ...j });
+    if(job){
+      setJob({ ...job, ...j });
+    }
   };
-  const ActiveSections = Sections.filter((section) =>
-    section.shouldShow(job, step)
-  );
-  const canProgress = ActiveSections.slice(-1)[0].canProgress(job);
+  const ActiveSections = Sections.filter((section) =>{
+    if(job){
+       return section.shouldShow(job, step) 
+    }
+    else{
+     return false
+    }
+  });
+
+  const canProgress = job ? ActiveSections.slice(-1)[0].canProgress(job) : false;
 
   return (
       <Box
@@ -117,7 +117,7 @@ function HomePage() {
                 describing the resources you are interested in. 
                   </Typography>
               </Grid>
-          {ActiveSections.map((section, i) => (
+          {job && ActiveSections.map((section, i) => (
             <>
               <Grid item xs={12} md={6} lg={6} className="fade-in" spacing={12}>
                 <Stack direction="row" spacing={1} alignItems="flex-start" justifyContent="space-between"  sx={{mr: 2, mb: 4}}>
@@ -137,7 +137,7 @@ function HomePage() {
               </Grid>
             </>
           ))}
-          {(ActiveSections[ActiveSections.length-1].name!=="JobRunnerSection") &&
+          {job && (ActiveSections[ActiveSections.length-1].name!=="JobRunnerSection") &&
           <Grid item xs={12} sx={{textAlign:"right"}}>
 
           <Button
