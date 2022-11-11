@@ -38,6 +38,7 @@ import {useJob} from "../Hooks/useJob";
 export interface SectionComponentSpec {
   job: Job;
   onUpdate: (j: Partial<Job>) => void;
+  resetJob: ()=>void;
 }
 
 export interface SectionSpec {
@@ -67,7 +68,7 @@ const Sections: SectionSpec[] = [
 ];
 
 function HomePage() {
-  const {job,setJob} = useJob()
+  const {job,setJob,resetJob} = useJob()
 
   const [step, setStep] = useState<number>(0);
   useLayoutEffect(() => {
@@ -133,7 +134,7 @@ function HomePage() {
                 {!!section.additionalDescription && section.additionalDescription({job})}
               </Grid>
               <Grid item xs={12} md={6} lg={6} className="fade-in" sx={{width:"100%"}}>
-                {section.component({ job, onUpdate: handleUpdate })}
+                {section.component({ job, onUpdate: handleUpdate, resetJob:resetJob })}
               </Grid>
             </>
           ))}

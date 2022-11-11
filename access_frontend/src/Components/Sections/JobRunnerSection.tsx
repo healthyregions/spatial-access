@@ -9,12 +9,13 @@ import {validateJob} from "../../Hooks/useJobRunner";
 
 const JobRunnerSectionComponent: React.FC<SectionComponentSpec> = ({
   onUpdate,
+  resetJob,
   job,
 }) => {
 
   return (
     <>
-      <JobRunner job={job} destinationFile={job.destinationFile} populationFile={job.populationFile} />
+      <JobRunner resetJob={resetJob} job={job} destinationFile={job.destinationFile} populationFile={job.populationFile} />
     </>
   );
 };

@@ -68,7 +68,7 @@ const uploadFileToPresigned = async (file: File,urlDetails:{url: string, fields:
 export const useJobRunner = (
   job: Job,
 ) => {
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [jobResultUrl, setJobResultUrl] = useState<any| null>(null);
   const [status, setStatus] = useState<string>('pending')
 
