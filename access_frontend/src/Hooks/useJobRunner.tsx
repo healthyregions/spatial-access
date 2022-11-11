@@ -10,13 +10,11 @@ export const validateJob =(job:Job)=>{
   let isValid = true 
   // Check to see if we have the right columns set in destinatons using points
   if( job.destinationFormat === 'point' && !(job.destLatCol && job.destLngCol)){
-    console.log("Not valid because we expect point geometry to have a lat and long column ", job)
     isValid=false
   }
 
   // Check to see if we have the right columns set for admin 
   if( job.destinationFormat === 'admin' && !job.destAdminCol){
-    console.log("Not valid because we specified that the input dests are at the admin level and no adminIdCol set")
     isValid=false
   }
 
@@ -25,7 +23,6 @@ export const validateJob =(job:Job)=>{
   if(job.includeModelMetrics){
     // Check to see if we have a custom source that we also have a populationFile and a source population column selected 
     if(job.populationSource ==='custom' && !(job.sourcePopulationColumn && populationFile)){
-      console.log("Not valid because we have specified a custom population but have either not included a population column or there is no populationFile")
       isValid=false
     }
   }
@@ -46,12 +43,11 @@ const awaitJobResolved = async (jobId: string) => {
 
     console.log("Job Stats is ", job);
     if (job.status=== "failed") {
-      return Promise.reject(Error("job failed"));
+      return Promise.resolve(job);
     }
     
     if (job.status === "done") {
-      result = job;
-      return Promise.resolve(result)
+      return Promise.resolve(job)
     }
 
     await sleep(10000);
@@ -81,6 +77,8 @@ export const useJobRunner = (
   const run = useCallback(()=>{
     
     (async ()=>{
+      setStatus("running")
+      setError(null)
       const jobReply= await fetch(`${BASE_URL}/jobs`, {method:"POST", body:JSON.stringify(job)})
       const jobResponse = await jobReply.json()
       const jobId = jobResponse.job.id
@@ -88,22 +86,20 @@ export const useJobRunner = (
       await uploadFileToPresigned(job.destinationFile!, destination_upload_url)
 
       if((job.includeModelMetrics) && job.populationSource === "custom"){
-        setStatus("Uploading Population File")
         await uploadFileToPresigned(job.populationFile!, population_upload_url)
         await fetch(population_upload_url.url, {method:"POST", body:JSON.stringify(population_upload_url.fields)})
       }
       
-      setStatus("Running Job")
       await fetch(`${BASE_URL}/jobs/${jobId}/run`, {method:"POST"})
 
       const result = await awaitJobResolved(jobResponse.job.id)
-      console.log("result is ",result)
-      if(result.error){
-        setError(result.error)
-        setStatus("failed")
+      if(result.status==='failed'){
+        console.log("detected failure")
+        setError(result.error_message)
+        setStatus("pending")
       }
       else{
-        setStatus(result.status)
+        setStatus('done')
         setJobResultUrl(result)
       }
 

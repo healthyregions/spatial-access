@@ -80,5 +80,5 @@ custom:
     dockerizePip: true
     zip: true  
     strip: false
-    useDownloadCache: false
-    useStaticCache: false
+    useDownloadCache: true 
+    useStaticCache: true 

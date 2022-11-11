@@ -156,9 +156,9 @@ export const DestinationFileSelection: React.FC<
   if (!file) {
     return (
       <Box sx={{ marginBottom: "20px" }}>
-        <Typography variant="h5">Destination File</Typography>
+        <Typography variant="h5">Resource File</Typography>
         <Typography variant="body1">
-          Please select a csv file containing your destinations with the
+          Please select a csv file containing your resources with the
           following columns
           <ul>
             <li>A column which has a unique id for each resource destination</li>
@@ -192,7 +192,7 @@ export const DestinationFileSelection: React.FC<
           </ul>
         </Typography>
         <Button variant="contained" component="label" {...getRootProps}>
-          {isDragActive ? "Drop here" : "Select Destination File"}
+          {isDragActive ? "Drop here" : "Select Resource File"}
           <input type="file" hidden {...getInputProps()} />
         </Button>
       </Box>
@@ -330,7 +330,7 @@ const DestinationFileUploadComponent: React.FC<SectionComponentSpec> = ({
 }) => {
   return (
     <Stack direction="column" spacing={2} width="50%">
-      <FileSelection onUpdate={onUpdate} job={job} title="Destination File Settings" />
+      <FileSelection onUpdate={onUpdate} job={job} title="Resource File Settings" />
     </Stack>
   );
 };

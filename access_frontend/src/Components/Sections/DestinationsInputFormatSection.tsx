@@ -63,7 +63,7 @@ const canProgress = (_job: Job) => true;
 const shouldShow = (job: Job, step: number) =>
   (step > 1 && !job.includeModelMetrics) ||
   (step > 3 && job.includeModelMetrics);
-const prompt = (_job: Job) => "What is the data format of your resource destinations?";
+const prompt = (_job: Job) => "What is the data format of your resource file?";
 const tooltip = (_job: Job) =>
   "For point data, your latitude and longitude columns should be in the WGS84/EPSG:4326 projection.";
 

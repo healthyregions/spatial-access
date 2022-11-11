@@ -19,6 +19,7 @@ import {
 
 import MenuIcon from '@mui/icons-material/Menu';
 
+import {useJob} from "./Hooks/useJob"
 
 import { createTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar"; import Typography from "@mui/material/Typography";
@@ -83,29 +84,6 @@ const Sections: SectionSpec[] = [
 ];
 
 function App() {
-  const [job, setJob] = useState<Job>({
-    mode: "car",
-    geom: "tract",
-    threshold: 30,
-    destinationFormat: "point",
-    includeModelMetrics: false,
-    populationSource: "census",
-  });
-
-  const [step, setStep] = useState<number>(0);
-  useLayoutEffect(() => {
-    window.scrollTo(0, document.body.scrollHeight);
-  }, [step]);
-
-  // SubmitSection,
-  // ResultSection
-  const handleUpdate = (j: Partial<Job>) => {
-    setJob({ ...job, ...j });
-  };
-  const ActiveSections = Sections.filter((section) =>
-    section.shouldShow(job, step)
-  );
-  const canProgress = ActiveSections.slice(-1)[0].canProgress(job);
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -119,7 +97,7 @@ function App() {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        Spatial Accesss Calculator 
+        Spatial Access Calculator 
       </Typography>
       <Divider />
       <List>

@@ -45,14 +45,11 @@ def save_result(result,job):
         resultObject = s3.Object(BUCKET,result_file)
         dirpath = tempfile.mkdtemp()
         filename = f"{dirpath}/result.zip"
-        result.toFile(filename)
+        result.to_file(filename)
         s3.upload_file(filename,BUCKET,result_file)
         shutil.rmtree(dirpath)
-
-
     else:
         raise Exception("File type not supported")
-
 
     return create_presigned_get_url(BUCKET,result_file,expiration=86400)
 
