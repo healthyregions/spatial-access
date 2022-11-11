@@ -55,6 +55,7 @@ const theme = createTheme(themeOptions);
 export interface SectionComponentSpec {
   job: Job;
   onUpdate: (j: Partial<Job>) => void;
+  resetJob: ()=>void
 }
 
 export interface SectionSpec {
