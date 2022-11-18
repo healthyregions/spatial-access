@@ -28,7 +28,9 @@ provider:
   region: us-east-2
   timeout: 20
   environment:
+    # Bucket that is used to store the data for the calculations
     ACCESS_BUCKET: 'access-metrics-dev'
+    # Path within the bucket to be used to store the data 
     ACCESS_PATH: "jobs" 
     REGION_NAME: 'us-east-2'
   iam:
