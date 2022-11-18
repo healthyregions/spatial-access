@@ -1,5 +1,4 @@
 **/node_modules
-spatial_access_api/logs
-spatial_access_api/react_app
 .yarn
 yarn.lock
+.DS_Store
