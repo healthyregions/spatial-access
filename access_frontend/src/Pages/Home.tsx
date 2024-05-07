@@ -118,7 +118,8 @@ function HomePage() {
                 describing the resources you are interested in. 
                   </Typography>
               </Grid>
-          {job && ActiveSections.map((section, i) => (
+          {job && ActiveSections.map((section, i) => {
+          return (
             <>
               <Grid item xs={12} md={6} lg={6} className="fade-in" spacing={12}>
                 <Stack direction="row" spacing={1} alignItems="flex-start" justifyContent="space-between"  sx={{mr: 2, mb: 4}}>
@@ -137,7 +138,8 @@ function HomePage() {
                 {section.component({ job, onUpdate: handleUpdate, resetJob:resetJob })}
               </Grid>
             </>
-          ))}
+          )}
+          )}
           {job && (ActiveSections[ActiveSections.length-1].name!=="JobRunnerSection") &&
           <Grid item xs={12} sx={{textAlign:"right"}}>
 

@@ -13,7 +13,8 @@ import os
     
 tracts = gpd.read_file(DEFAULT_GEOGRAPHIES['tract'])
 zips = gpd.read_file(DEFAULT_GEOGRAPHIES['zip'])
-
+logger.info(f"in geo_handler, tract is: {tracts.head()}") # works
+logger.info(f"in geo_handler, zip is: {zips.head()}") # works
 
 def metrics_success(event,context):
     print("success")
@@ -39,7 +40,7 @@ def load_df_from_s3(object_name):
 
 
 def process_job(event,context):
-
+    logger.info(f"event is {event}")
     filesUploaded = event['Records']
     fileKey = filesUploaded[0]["s3"]["object"]['key']
 
@@ -60,6 +61,7 @@ def process_job(event,context):
             logger.info(f"got {destinations.shape[0]} destinations" )
             logger.info(f"Setting up access parser" )
 
+            # Failed to run 'zip', probably in the initial setup
             access_parser = AccessMetricParser(
                 transit_mode=job['mode'],
                 geo_unit=job["geom"],
@@ -70,6 +72,8 @@ def process_job(event,context):
 
             logger.info(f"assigning destination data" )
             #  load destination data
+
+            # if select 'tract', this is the method that throws the error Failed to run 'GEOID'
             access_parser.set_destination_data(
                 df=destinations,
                 lat_col=job["destLatCol"],
@@ -82,6 +86,7 @@ def process_job(event,context):
             # merge data
             logger.info("Merging data")
 
+            # this is the method that have Runtime exited with error: signal: killed Runtime.ExitError (i.e. run out of 10240 MB memory)
             access_parser.merge_data()
 
             logger.info("Running metrics")

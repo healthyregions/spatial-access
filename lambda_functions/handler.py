@@ -8,7 +8,7 @@ from access_logging import logger
 
 BUCKET = os.environ["ACCESS_BUCKET"]
 PATH   = os.environ["ACCESS_PATH"]
-s3 = boto3.resource('s3')
+s3 = boto3.resource('s3') # this s3 is not called here, can be removed
 
 
 def create_job(event,context):
@@ -84,6 +84,7 @@ def create_job(event,context):
 
 def run_job(event,context):
     job_id = event["pathParameters"]['job_id']
+    logger.info("In run_job function")
     job = load_job(job_id)
     logger.info(f"Running job with id {job_id}")
 
@@ -101,7 +102,7 @@ def run_job(event,context):
         }
 
 
-
+# The error is seems to be the continuation of calling this function.
 def get_job(event,context):
     job_id = event["pathParameters"]['job_id']
     logger.info(f"Getting job {job_id}")

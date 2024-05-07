@@ -14,7 +14,6 @@ export const useJob =()=>{
    const [job, setJob] = useState<Job|null>(null) 
 
    useEffect(()=>{
-     console.log("running use effect")
      if(job===null){
         let savedJob = localStorage.getItem("job")
         if(savedJob){

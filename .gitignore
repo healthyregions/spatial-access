@@ -2,3 +2,4 @@
 .yarn
 yarn.lock
 .DS_Store
+requirements.txt

@@ -14,7 +14,7 @@ interface JobRunnerProps {
 
 export const JobRunner: React.FC<JobRunnerProps> = ({ job,resetJob}) => {
   const { result, error, run, status, isValid } = useJobRunner(job);
-  console.log("error is ", error);
+  if(error) console.log("error is ", error);
   return (
     <>
       {status === "pending" && (

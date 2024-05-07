@@ -4,6 +4,8 @@ from shapely.geometry import Point
 from dataclasses import dataclass
 from typing import List, Union
 from access import Access, weights, Datasets
+import boto3
+import os
 
 def dfToGdf(df, lon, lat, crs='EPSG:4326'):
   '''
@@ -17,6 +19,7 @@ def dfToGdf(df, lon, lat, crs='EPSG:4326'):
     crs=crs,
     geometry=[Point(xy) for xy in zip(df[lon], df[lat])])
 
+# worked well
 DEFAULT_MATRICES = {
     'tract': {
         'car':'https://uchicago.box.com/shared/static/hkipez75z2p7zivtjdgsfzut4rhm6t6h.parquet',
@@ -30,20 +33,41 @@ DEFAULT_MATRICES = {
     }
 }
 
+
 DEFAULT_GEOGRAPHIES = {
-    'tract': 'https://uchicago.box.com/shared/static/kfoid6fzlbpyfecmwpe9u16cl5n89ru0.zip',
-    'zip':'https://uchicago.box.com/shared/static/270ca6syxcg3dlvohhnt3ap92m4t7cxc.zip'
+    'tract': 'zip_files/cb_2019_us_tract_500k.zip',
+    'zip':'zip_files/cb_2018_us_zcta510_500k.zip'
 }
 
+# does this mean for our file, if we select tract, we will need GEOID column? if we select zip, we will need GEOID10 column?
 DEFAULT_GEOID_COLS = {
     "tract":"GEOID",
     "zip": "GEOID10"
 }
 
+# csv file seems to work
 DEFAULT_POP_DATA = {    
     'tract':'https://uchicago.box.com/shared/static/z6xm6tre935xbc06gg4ukzgyicro26cw.csv',
     'zip': 'https://uchicago.box.com/shared/static/njjpskiuj7amcztrxjws2jfwqlv66t49.csv'
 }
+
+# /vsizip/vsicurl/https://uchicago.box.com/shared/static/kfoid6fzlbpyfecmwpe9u16cl5n89ru0.zip' does not exist in the file system, and is not recognized as a supported dataset name.
+
+BUCKET = os.environ["ACCESS_BUCKET"]
+PATH   = os.environ["ACCESS_PATH"]
+object_key = 'zip_files/cb_2019_us_tract_500k.zip'
+local_file_path = '/tmp/cb_2019_us_tract_500k.zip'  # Temporary file path in Lambda environment
+
+
+# DEFAULT_GEOGRAPHIES = {
+#     'tract': 'https://uchicago.box.com/shared/static/kfoid6fzlbpyfecmwpe9u16cl5n89ru0.zip',
+#     'zip':'https://uchicago.box.com/shared/static/270ca6syxcg3dlvohhnt3ap92m4t7cxc.zip'
+# }
+# DEFAULT_GEOGRAPHIES = {
+#     'tract': s3.download_file(BUCKET, object_key, local_file_path), #DriverError: '/vsizip/zip_files/cb_2019_us_tract_500k.zip' does not exist in the file system, and is not recognized as a supported dataset name.
+#     'zip':'https://uchicago.box.com/shared/static/270ca6syxcg3dlvohhnt3ap92m4t7cxc.zip'
+# }
+
 
 StrOrInt = Union[int, str]
 
@@ -107,14 +131,23 @@ class AccessMetricParser:
                 self.matrix_join_col_d,
                 self.matrix_travel_cost_col
             )
-
+        # if geographies is not None:
+        #     self.set_geographies(geographies, geo_join_col)
+        # else:
+        #     self.set_geographies(
+        #         gpd.read_file(DEFAULT_GEOGRAPHIES[geo_unit]).to_crs('EPSG:4326'), 
+        #         self.geo_join_col
+        #     )
         if geographies is not None:
             self.set_geographies(geographies, geo_join_col)
         else:
+            print(f"loading geographies from DEFAULT_GEOGRAPHIES for {geo_unit}")
+            print(DEFAULT_GEOGRAPHIES[geo_unit])
             self.set_geographies(
                 gpd.read_file(DEFAULT_GEOGRAPHIES[geo_unit]).to_crs('EPSG:4326'), 
                 self.geo_join_col
             )
+            os.remove(local_file_path)
         if population_data is not None:
             self.set_population_data(
                 population_data, 
@@ -122,11 +155,25 @@ class AccessMetricParser:
                 population_data_col
             )
         else:
+            print(f"loading population data from DEFAULT_POP_DATA for {geo_unit}")
             default_pop_data = pd.read_csv(DEFAULT_POP_DATA[geo_unit])[[population_join_col, population_data_col]].iloc[1:]
+            # [ERROR] 2024-04-30T20:05:05.583Z fd410db2-5668-45ee-83e1-8b0fa25b9f38 Failed to run 'GEOID'.
+            # Does this means the file must have a FIPS and Total Population column?
+            print(f"The first five default_pop_data is {default_pop_data.head(5)}")
             self.set_population_data(default_pop_data, 
                  population_join_col, 
                  population_data_col
             )
+        # if geographies is not None:
+        #     self.set_geographies(geographies, geo_join_col)
+        # else:
+        #     print(f"loading geographies from DEFAULT_GEOGRAPHIES for {geo_unit}")
+        #     print(DEFAULT_GEOGRAPHIES[geo_unit])
+        #     self.set_geographies(
+        #         gpd.read_file(DEFAULT_GEOGRAPHIES[geo_unit]).to_crs('EPSG:4326'), 
+        #         self.geo_join_col
+        #     )
+        #     os.remove(local_file_path)
 
     def set_geographies(self, gdf: gpd.GeoDataFrame, geo_join_col: str) -> None:
         self.geographies = gdf
@@ -174,31 +221,51 @@ class AccessMetricParser:
             self.destinations_geoid_col = geoid_col
         else:
             destinations = dfToGdf(df, lon_col, lat_col)
+            print(f"in set_destination determining destinations with {destinations.head()}")
             gdf = gpd.sjoin(destinations, self.geographies[[self.geo_join_col, 'geometry']], how='inner', op='intersects')
+            print(f"in set_destination, gdf is {gdf.head()}")
+            # in set_destination, gdf is GEOID_left FIPS ... index_right GEOID_right
             self.destinations = pd.DataFrame(gdf)
+            print(f"self.destinations is {self.destinations.columns}")
             self.destinations_geoid_col = self.geo_join_col
+            print(f"self.destinations_geoid_col is {self.destinations_geoid_col}")
 
+        print(f"current index name is: {self.destinations.index.name}") # None
         self.destinations = self.destinations.reset_index().rename(columns={df.index.name:'_access_matrix_index'})
+        print(f"self.destinations is {self.destinations.head()}")
         if (self.coerce_geoid == True):
             self.destinations[self.destinations_geoid_col] = self.destinations[self.destinations_geoid_col].astype('int64')
 
     def set_population_data(
-        self,
-        df: pd.DataFrame,
+        self, 
+        df: pd.DataFrame,#default_pop_data
         population_join_col:str,
         population_data_col:str
     ) -> None:
+        print(f"setting population data with {population_join_col} and {population_data_col}")
+        print(f"self is {self}")
+        # self is AccessMetricParser(geo_unit='zip', transit_mode='car', matrix_join_col_o='origin', matrix_join_col_d='destination', matrix_travel_cost_col='minutes', transit_matrix=  origin  destination  minutes (DF)
+        # population_join_col='', population_data_col='', coerce_geoid=True, geographies=Empty GeoDataFrame,  valid_origins=None, geo_join_col='GEOID', destinations=Empty DataFrame
+
+
         if (self.coerce_geoid == True):
             df[population_join_col] = df[population_join_col].astype('int64')
         self.population_data = df[[population_join_col, population_data_col]]
         self.population_join_col = population_join_col
         self.population_data_col = population_data_col
+        
+        # all of them above are empty
+        print(f"before geographies.merge, self.geo_join_col is {self.geo_join_col}, self.geographies is {self.geographies}, self.population_data is {self.population_data}")
+        # self.geo_join_col is GEOID, self.geographies is Empty GeoDataFrame, self.population_data is FIPS Total Population
+
+        # [ERROR] 2024-04-30T20:40:06.950Z 66a9ee87-6713-4764-a8db-2551f44cd905 Failed to run 'GEOID' 
         self.geographies = self.geographies.merge(
             self.population_data,
             how="left",
-            left_on=self.geo_join_col,
+            left_on=self.geo_join_col, # based on this. self should have a GEOID column
             right_on=self.population_join_col
         )
+        print(f"now self.geographies is {self.geographies.head()}")
 
     def set_travel_threshold(self, threshold: int) -> None:
         self.travel_threshold = threshold
@@ -206,6 +273,51 @@ class AccessMetricParser:
     def merge_data(
         self
     ) -> pd.DataFrame:
+        print(f"merge_data method is called")
+        # Error: Runtime exited with error: signal: killed
+        # merged_data = self.transit_matrix \
+        #     .merge(
+        #         self.destinations,
+        #         how="inner",
+        #         left_on=self.matrix_join_col_d,
+        #         right_on=self.destinations_geoid_col
+        #      )
+
+        # NOT WORK: Use Index for Joining, still Error: Runtime exited with error: signal: killed Runtime.ExitError
+        # self.transit_matrix.set_index(self.matrix_join_col_d, inplace=True)
+        # self.destinations.set_index(self.destinations_geoid_col, inplace=True)
+        # merged_data = self.transit_matrix.merge(self.destinations, how="inner", left_index=True, right_index=True)
+
+        # print(f"after self.transit_matrix.merge, merged_data is {merged_data.head()} with columns {merged_data.columns}")
+        # merged_data = merged_data.sort_values(self.matrix_travel_cost_col, ascending=True)
+        # print(f"after sort_values, merged_data is {merged_data.head()}")
+        # merged_data[self.matrix_travel_cost_col] = merged_data[self.matrix_travel_cost_col].replace(-1000, 999)
+        # print(f"after replace, merged_data is {merged_data.head()}")
+        # self.merged_data = merged_data
+
+        # to fix the run out of memory error, try chunking the merge
+        # chunk_size = 15000
+        # for i in range(0, len(self.transit_matrix), chunk_size):
+        #     chunk_transit = self.transit_matrix.iloc[i:i + chunk_size]
+        #     merged_chunk = chunk_transit.merge(
+        #         self.destinations,
+        #         how="inner",
+        #         left_on=self.matrix_join_col_d,
+        #         right_on=self.destinations_geoid_col
+        #     )
+        #     print(f"after merge, merged_chunk is {merged_chunk.head()} with columns {merged_chunk.columns}")
+        #     # Index(['origin', 'destination', 'minutes', 'index', 'compa', 'NAICS','geometry', 'index_right', 'GEOID'],
+            
+            
+        #     # tried to use 'minutes' first, then will replace it to matrix_travel_cost_col
+        #     merged_chunk = merged_chunk.sort_values('minutes', ascending=True) # minutes
+        #     print(f"after sort_values, merged_chunk is {merged_chunk.head()}")
+            
+        #     merged_chunk[self.matrix_travel_cost_col] = merged_chunk[self.matrix_travel_cost_col].replace(-1000, 999)
+        #     print(f"after replace, merged_chunk is {merged_chunk.head()}")
+            
+        #     self.merged_data = pd.concat([self.merged_data, merged_chunk])
+        #     print(f"after concat, self.merged_data is {self.merged_data.head()} and iteration {i}")
         merged_data = self.transit_matrix \
             .merge(
                 self.destinations,
@@ -320,7 +432,7 @@ def create_presigned_get_url(bucket_name, object_name, expiration=3600):
                                                             'Key': object_name},
                                                     ExpiresIn=expiration)
     except ClientError as e:
-        logging.error(e)
+        print(e)
         return None
 
     # The response contains the presigned URL
@@ -343,7 +455,7 @@ def create_presigned_put_url(bucket_name, object_name, expiration=3600):
                                                             'Key': object_name},
                                                     ExpiresIn=expiration)
     except ClientError as e:
-        logging.error(e)
+        print(e)
         return None
 
     # The response contains the presigned URL
