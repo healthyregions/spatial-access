@@ -2,4 +2,4 @@
 .yarn
 yarn.lock
 .DS_Store
-**/.*.zip
+lambda_functions/.requirements.zip
