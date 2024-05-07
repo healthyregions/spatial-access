@@ -2,4 +2,4 @@
 .yarn
 yarn.lock
 .DS_Store
-**/*.zip
+**/.*.zip
