@@ -1,8 +1,0 @@
-access
-boto3
-geopandas
-pandas
-pyarrow
-pyproj
-rtree
-shapely
