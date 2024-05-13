@@ -1,4 +1,4 @@
-import { Button, Stack, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import React from "react";
 import { Job } from "../../Types/Job";
 import { useJobRunner } from "../../Hooks/useJobRunner";

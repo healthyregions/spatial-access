@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 
 import "../App.css";
 import {
@@ -7,12 +7,10 @@ import {
   Grid,
   IconButton,
   Stack,
-  ThemeProvider,
   Tooltip,
 } from "@mui/material";
+import Typography from "@mui/material/Typography";
 
-import AppBar from "@mui/material/AppBar"; import Typography from "@mui/material/Typography";
-import CssBaseline from "@mui/material/CssBaseline";
 import { Job } from "../Types/Job";
 
 // sections

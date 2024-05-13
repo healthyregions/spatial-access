@@ -1,11 +1,10 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {Job} from "../Types/Job";
-import { CalculationSettings, JobParams, ODFileDetails } from "../Types/types";
 
 const BASE_URL = " https://xkzebn43cc.execute-api.us-east-1.amazonaws.com"
 
 export const validateJob =(job:Job)=>{
-  const {destinationFile, populationFile } = job
+  const { populationFile } = job
   let isValid = true 
   // Check to see if we have the right columns set in destinatons using points
   if( job.destinationFormat === 'point' && !(job.destLatCol && job.destLngCol)){
@@ -34,7 +33,6 @@ async function sleep(ms: number) {
 }
 
 const awaitJobResolved = async (jobId: string) => {
-  let result;
 
   while (true) {
     let resp = await fetch(`${BASE_URL}/jobs/${jobId}`);
