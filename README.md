@@ -6,7 +6,8 @@
 
 ## Roadmap
 
-<iframe src="https://uillinoisedu-my.sharepoint.com/personal/pengyins_illinois_edu/_layouts/15/Doc.aspx?sourcedoc={4ff8e2de-e00f-4e92-9bed-50425680ff0b}&amp;action=embedview" width="402px" height="327px" frameborder="0">This is an embedded <a target="_blank" href="https://office.com">Microsoft Office</a> diagram, powered by <a target="_blank" href="https://office.com/webapps">Office</a>.</iframe>
+
+![access-test-roadmap](./read_me/access-test-roadmap.png)
 
 ## A Step-by-Step Setup Guide using Serverless, AWS, and Netlify
 
