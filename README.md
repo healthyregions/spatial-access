@@ -1,6 +1,14 @@
 # The Access App
 [![Netlify Status](https://api.netlify.com/api/v1/badges/293d8b91-1f8d-40db-9f8d-646d6fdb90d8/deploy-status)](https://app.netlify.com/sites/helpful-lollipop-5db1fd/deploys)
 
+- [Roadmap](#roadmap)
+- [A Step-by-Step Setup Guide using Serverless, AWS, and Netlify](#a-step-by-step-setup-guide-using-serverless-aws-and-netlify)
+
+## Roadmap
+
+
+![access-test-roadmap](./read_me/access-test-roadmap.png)
+
 ## A Step-by-Step Setup Guide using Serverless, AWS, and Netlify
 
 *Lastly updated on May 2024*

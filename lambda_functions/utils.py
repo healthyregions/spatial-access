@@ -70,7 +70,7 @@ def save_result(result,job):
         dirpath = tempfile.mkdtemp()
         filename = f"{dirpath}/result.zip"
         result.to_file(filename)
-        s3.upload_file(filename,BUCKET,result_file)
+        s3Client.upload_file(filename,BUCKET,result_file)
         shutil.rmtree(dirpath)
     else:
         raise Exception("File type not supported")
