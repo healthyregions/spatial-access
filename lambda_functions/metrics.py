@@ -117,6 +117,7 @@ class AccessMetricParser:
         if coerce_geoid is not None:
             self.coerce_geoid = coerce_geoid
 
+        print(f"start initializing AccessMetricParser with {geo_unit} and {transit_mode} and {geographies.columns.tolist()}")
         if transit_matrix is not None:
             self.set_transit_matrix(
                 transit_matrix,
@@ -140,9 +141,9 @@ class AccessMetricParser:
         #     )
         if geographies is not None:
             self.set_geographies(geographies, geo_join_col)
+            print(f"loading geographies from geographies for {geo_unit} and it is {geographies.columns.tolist()}")
         else:
-            print(f"loading geographies from DEFAULT_GEOGRAPHIES for {geo_unit}")
-            print(DEFAULT_GEOGRAPHIES[geo_unit])
+            print(f"loading geographies from DEFAULT_GEOGRAPHIES for {geo_unit} and it is {DEFAULT_GEOGRAPHIES[geo_unit]}")
             self.set_geographies(
                 gpd.read_file(DEFAULT_GEOGRAPHIES[geo_unit]).to_crs('EPSG:4326'), 
                 self.geo_join_col
@@ -175,12 +176,18 @@ class AccessMetricParser:
         #     )
         #     os.remove(local_file_path)
 
+    # this could be the trigger point of Failed to run 'ZIP'
     def set_geographies(self, gdf: gpd.GeoDataFrame, geo_join_col: str) -> None:
         self.geographies = gdf
         self.geo_join_col = geo_join_col
+        print(f"set_geographies is called with {self.geographies.columns.tolist()} and {self.geo_join_col}, and {self.coerce_geoid}") # geo_join_col is ZIP if selected zip. coerce_geoi is true
         if (self.coerce_geoid == True):
-            self.geographies[self.geo_join_col] = self.geographies[self.geo_join_col].astype('int64')
-        self.valid_origins = list(self.geographies[self.geo_join_col].unique())
+            try:
+                self.geographies[self.geo_join_col] = self.geographies[self.geo_join_col].astype('int64')
+            except Exception as e: print(f" Error in self.geographies[self.geo_join_col] : {e} ")
+        try:
+            self.valid_origins = list(self.geographies[self.geo_join_col].unique())
+        except Exception as e: print(f" Error in self.valid_origins : {e} ")
 
     def set_transit_matrix(self, pd: pd.DataFrame, matrix_join_col_o: str, matrix_join_col_d:str, matrix_travel_cost_col:str) -> None:
         self.transit_matrix = pd
@@ -191,7 +198,8 @@ class AccessMetricParser:
         if (self.coerce_geoid == True):
             self.transit_matrix[self.matrix_join_col_o] = self.transit_matrix[self.matrix_join_col_o].astype('int64')
             self.transit_matrix[self.matrix_join_col_d] = self.transit_matrix[self.matrix_join_col_d].astype('int64')
-   
+        # this function ran successfully under the 'Failed to run 'ZIP' error
+
     # Load only the matrices for states that we have in the dataset
     # def get_limited_transit_matrix(self):
     #     if(self.destinations == None):
@@ -242,8 +250,7 @@ class AccessMetricParser:
         population_join_col:str,
         population_data_col:str
     ) -> None:
-        print(f"setting population data with {population_join_col} and {population_data_col}")
-        print(f"self is {self}")
+        print(f"setting population data with {population_join_col} and {population_data_col}") # FIPS and Total Population
         # self is AccessMetricParser(geo_unit='zip', transit_mode='car', matrix_join_col_o='origin', matrix_join_col_d='destination', matrix_travel_cost_col='minutes', transit_matrix=  origin  destination  minutes (DF)
         # population_join_col='', population_data_col='', coerce_geoid=True, geographies=Empty GeoDataFrame,  valid_origins=None, geo_join_col='GEOID', destinations=Empty DataFrame
 
@@ -255,16 +262,18 @@ class AccessMetricParser:
         self.population_data_col = population_data_col
         
         # all of them above are empty
-        print(f"before geographies.merge, self.geo_join_col is {self.geo_join_col}, self.geographies is {self.geographies}, self.population_data is {self.population_data}")
+        print(f"before geographies.merge, self.geo_join_col is {self.geo_join_col},self.population_join_col is {self.population_join_col}, self.geographies is {self.geographies.columns.tolist()}, self.population_data is {self.population_data.columns.tolist()}")
         # self.geo_join_col is GEOID, self.geographies is Empty GeoDataFrame, self.population_data is FIPS Total Population
 
-        # [ERROR] 2024-04-30T20:40:06.950Z 66a9ee87-6713-4764-a8db-2551f44cd905 Failed to run 'GEOID' 
-        self.geographies = self.geographies.merge(
+        # what is zcta510 column is zip?
+        try:
+            self.geographies = self.geographies.merge(
             self.population_data,
             how="left",
-            left_on=self.geo_join_col, # based on this. self should have a GEOID column
+            left_on=self.geo_join_col, # based on this. self should have a GEOID (census contract) column or a ZIP (zip) column
             right_on=self.population_join_col
         )
+        except Exception as e: print(f" Error in self.geographies.merge : {e} ") # 'zip' error is here
         print(f"now self.geographies is {self.geographies.head()}")
 
     def set_travel_threshold(self, threshold: int) -> None:
@@ -398,19 +407,26 @@ class AccessMetricParser:
     
     def run_all_metrics(self, withModel=None) -> pd.DataFrame:
         ttn = self.analyze_nearest()
+        print(f"ttn is {ttn.head()}")
         cwt = self.analyze_count_in_threshold()
+        print(f"cwt is {cwt.head()}")
+        modelResult = pd.DataFrame()
         if withModel:
             if(withModel=='raam'):
                 modelResult = self.analyze_raam(initialize_access=True)
             elif(withModel=='2fca'):
                 modelResult = self.analyze_2SFC(initialize_access=True)
+        print(f"modelResult is {modelResult.head()}")
 
         result =self.geographies \
             .merge(ttn, how="left", left_on=self.geo_join_col, right_on=self.matrix_join_col_o) \
             .merge(cwt, how="left", left_on=self.geo_join_col, right_on=self.matrix_join_col_o) 
-
+        print(f"result is {result.head()}")
         if(withModel):
-            result = result.merge(modelResult, left_on=self.geo_join_col, right_on=self.matrix_join_col_o )
+            print(f"modelResult is {modelResult.head()}")
+            try:
+                result = result.merge(modelResult, left_on=self.geo_join_col, right_on=self.matrix_join_col_o )
+            except Exception as e: print(f" Error in result.merge : {e} ")
 
         return result.drop(columns=[f"{self.matrix_join_col_o}_x", f"{self.matrix_join_col_o}_y"])
             

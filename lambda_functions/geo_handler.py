@@ -66,7 +66,7 @@ def process_job(event,context):
                 transit_mode=job['mode'],
                 geo_unit=job["geom"],
                 geographies= tracts if job['geom'] == 'tract' else zips,
-                geo_join_col="GEOID" if job['geom'] == 'tract' else "zip",
+                geo_join_col="GEOID" if job['geom'] == 'tract' else "GEOID10",
                 coerce_geoid=True
             )
 

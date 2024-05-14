@@ -1,6 +1,13 @@
 # The Access App
 [![Netlify Status](https://api.netlify.com/api/v1/badges/293d8b91-1f8d-40db-9f8d-646d6fdb90d8/deploy-status)](https://app.netlify.com/sites/helpful-lollipop-5db1fd/deploys)
 
+- [Roadmap](#roadmap)
+- [A Step-by-Step Setup Guide using Serverless, AWS, and Netlify](#a-step-by-step-setup-guide-using-serverless-aws-and-netlify)
+
+## Roadmap
+
+<iframe src="https://uillinoisedu-my.sharepoint.com/personal/pengyins_illinois_edu/_layouts/15/Doc.aspx?sourcedoc={4ff8e2de-e00f-4e92-9bed-50425680ff0b}&amp;action=embedview" width="402px" height="327px" frameborder="0">This is an embedded <a target="_blank" href="https://office.com">Microsoft Office</a> diagram, powered by <a target="_blank" href="https://office.com/webapps">Office</a>.</iframe>
+
 ## A Step-by-Step Setup Guide using Serverless, AWS, and Netlify
 
 *Lastly updated on May 2024*
