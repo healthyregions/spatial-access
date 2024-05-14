@@ -118,7 +118,7 @@ sudo vim ~/.aws/credentials
 
 5. Set up an S3 bucket for the processing steps. In your S3 account, create a bucket and a folder called `jobs` within the bucket to store the data for the calculations. 
 
-![s3_1](./read_me/S3_1.png)
+![s3_1](./read_me/s3_1.png)
 
 Note that S3 bucket name needs to be unique across all AWS accounts. So you may need to try different names if the bucket name is already taken.
 
