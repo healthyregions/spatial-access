@@ -32,7 +32,6 @@ import DestinationFileUploadSection from "../Components/Sections/DestinationFile
 import OutputFormatSection from "../Components/Sections/OutputFormatSection";
 import JobRunnerSection from "../Components/Sections/JobRunnerSection";
 import { useJob } from "../Hooks/useJob";
-import { compareWithNumber } from "../../../../../PDL/pdl-original/src/components/shared/TableCompareFunctions";
 
 export interface SectionComponentSpec {
 	job: Job;
