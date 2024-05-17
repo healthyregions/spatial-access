@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState, useEffect } from "react";
 
 import "../App.css";
 import {
@@ -69,6 +69,10 @@ function HomePage() {
 	const { job, setJob, resetJob } = useJob();
 
 	const [step, setStep] = useState<number>(0);
+	useEffect(() => {
+    // Clear local storage every time the page is loaded
+    localStorage.clear();
+  }, []);
 	useLayoutEffect(() => {
 		window.scrollTo(0, document.body.scrollHeight);
 	}, [step]);
@@ -124,20 +128,20 @@ function HomePage() {
 					md={6}
 					lg={6}
 					className="fade-in"
-					sx={{ width: "100%" }}
+					sx={{ width: "100%"}}
 				>
-					<Typography variant="body2" sx={{ mb: 3 }}>
+					<Typography variant="body2" sx={{ mb: 2 }}>
 						Welcome to the Access App. You can use this web page to calculate
 						access to resources based on different transit modes. The
 						application will ask you a series of questions and based on those
 						answers it will then ask you to upload a couple of files describing
 						the resources you are interested in.
 					</Typography>
-					<Alert severity="info">
+					<Alert severity="info" sx={{ mb: 2, fontSize: 14 }}>
 						<Box sx={{ mb: 1 }}>
 							For now, this application is not compatible of processing csv
 							files with more than <b>3MB</b>. You may see <i>infinite job running
-							status</i> if you try to run a job with a file larger than 3MB.
+							status error</i> if you try to run a job with a file larger than 3MB.
 						</Box>
 						<Box>
 							For larger file, please consider splitting it into
@@ -146,6 +150,11 @@ function HomePage() {
 								CoLab Notebook
 							</a>
 							.
+						</Box>
+					</Alert>
+					<Alert severity="warning" sx={{fontSize: 14}}>
+						<Box>
+							If you refresh the home page, you will need to <b>restart</b> the whole process.
 						</Box>
 					</Alert>
 				</Grid>
