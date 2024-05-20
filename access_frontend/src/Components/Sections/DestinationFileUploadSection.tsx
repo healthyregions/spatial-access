@@ -110,10 +110,10 @@ export const PopulationFileSelection: React.FC<
 					</Grid>
 					<Grid item>
 						<InputForDetail
-							value={job.destLatCol}
+							value={job.sourcePopulationColumn}
 							items={columns ?? []}
 							title={"Column containing the population value for each source"}
-							onChange={(destLatCol) => onUpdate({ destLatCol })}
+							onChange={(sourcePopulationColumn) => onUpdate({ sourcePopulationColumn })}
 							disabled={inputsActive}
 						/>
 					</Grid>
