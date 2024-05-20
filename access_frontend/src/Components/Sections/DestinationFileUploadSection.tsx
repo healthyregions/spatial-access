@@ -340,7 +340,13 @@ const DestinationFileUploadComponent: React.FC<SectionComponentSpec> = ({
 		</Stack>
 	);
 };
-
+const AdditionalDescription: React.FC<{job:Job}> = ({job}) => {
+    return (
+        <Typography>
+            If you select the wrong file or need to change the columns, please <b>refresh this page</b> and start from the beginning.
+        </Typography>
+    )
+}
 const canProgress = (job: Job) =>
 	!!job.destinationFile &&
 	!!(
@@ -360,6 +366,7 @@ const tooltip = (_job: Job) =>
 
 const DestinationFileUploadSection = {
 	component: DestinationFileUploadComponent,
+	additionalDescription: AdditionalDescription,
 	canProgress,
 	shouldShow,
 	prompt,
