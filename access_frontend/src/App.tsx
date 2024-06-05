@@ -1,25 +1,20 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React from "react";
 
 import "./App.css";
 import {
   Box,
   Button,
   Divider, Drawer,
-  Grid,
   IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
-  Stack,
   ThemeProvider,
-  Toolbar,
-  Tooltip,
+  Toolbar
 } from "@mui/material";
 
 import MenuIcon from '@mui/icons-material/Menu';
-
-import {useJob} from "./Hooks/useJob"
 
 import { createTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar"; import Typography from "@mui/material/Typography";
@@ -27,22 +22,21 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { Job } from "./Types/Job";
 
 // sections
-import TravelModeSection from "./Components/Sections/TravelModeSection";
-import GeomUnitSection from "./Components/Sections/GeomUnitSection";
-import TravelTimeSection from "./Components/Sections/TravelTimeSection";
+// import TravelModeSection from "./Components/Sections/TravelModeSection";
+// import GeomUnitSection from "./Components/Sections/GeomUnitSection";
+// import TravelTimeSection from "./Components/Sections/TravelTimeSection";
 
 // icons
-import InfoIcon from "@mui/icons-material/Info";
-import ShouldIncludeModelSection from "./Components/Sections/ShouldIncludeModelSection";
-import PopulationDataSection from "./Components/Sections/PopulationDataSection";
-import CapacitySelectionSection from "./Components/Sections/CapacitySelectionSection";
-import CategorySelectionSection from "./Components/Sections/CategorySelectionSection";
-import WeightSelectionSection from "./Components/Sections/WeightSelectionSection";
-import ModelSelectionSection from "./Components/Sections/ModelSelectionSection";
-import DestinationInputFormatSection from "./Components/Sections/DestinationsInputFormatSection";
-import DestinationFileUploadSection from "./Components/Sections/DestinationFileUploadSection";
-import OutputFormatSection from "./Components/Sections/OutputFormatSection"
-import JobRunnerSection from './Components/Sections/JobRunnerSection'
+// import ShouldIncludeModelSection from "./Components/Sections/ShouldIncludeModelSection";
+// import PopulationDataSection from "./Components/Sections/PopulationDataSection";
+// import CapacitySelectionSection from "./Components/Sections/CapacitySelectionSection";
+// import CategorySelectionSection from "./Components/Sections/CategorySelectionSection";
+// import WeightSelectionSection from "./Components/Sections/WeightSelectionSection";
+// import ModelSelectionSection from "./Components/Sections/ModelSelectionSection";
+// import DestinationInputFormatSection from "./Components/Sections/DestinationsInputFormatSection";
+// import DestinationFileUploadSection from "./Components/Sections/DestinationFileUploadSection";
+// import OutputFormatSection from "./Components/Sections/OutputFormatSection"
+// import JobRunnerSection from './Components/Sections/JobRunnerSection'
 import {themeOptions} from './theme'
 import { NavLink, Routes, Route, BrowserRouter} from "react-router-dom";
 
@@ -68,21 +62,21 @@ export interface SectionSpec {
   additionalDescription?: React.FC<{job: Job}>;
 }
 
-const Sections: SectionSpec[] = [
-  TravelModeSection,
-  GeomUnitSection,
-  TravelTimeSection,
-  ShouldIncludeModelSection,
-  PopulationDataSection,
-  CapacitySelectionSection,
-  CategorySelectionSection,
-  ModelSelectionSection,
-  WeightSelectionSection,
-  DestinationInputFormatSection,
-  DestinationFileUploadSection,
-  OutputFormatSection,
-  JobRunnerSection
-];
+// const Sections: SectionSpec[] = [
+//   TravelModeSection,
+//   GeomUnitSection,
+//   TravelTimeSection,
+//   ShouldIncludeModelSection,
+//   PopulationDataSection,
+//   CapacitySelectionSection,
+//   CategorySelectionSection,
+//   ModelSelectionSection,
+//   WeightSelectionSection,
+//   DestinationInputFormatSection,
+//   DestinationFileUploadSection,
+//   OutputFormatSection,
+//   JobRunnerSection
+// ];
 
 function App() {
 

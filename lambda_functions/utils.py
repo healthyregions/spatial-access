@@ -15,9 +15,33 @@ s3Client= boto3.client('s3')
 def load_job(job_id):
     job_folder =f"{PATH}/{job_id}" 
     job_file = f"{job_folder}/job.json"
-    job_object = s3.Object(BUCKET,job_file).get()
-    job = job_object['Body'].read().decode('utf-8')
-    return json.loads(job)
+    # Log the job file being loaded
+    logger.info(f"Loading job file: {job_file}")
+
+    try:
+        # Load job file from S3
+        job_object = s3.Object(BUCKET, job_file).get()
+        job_content = job_object['Body'].read().decode('utf-8')
+
+        # Log the size of the job file
+        logger.info(f"Job file size: {len(job_content)} bytes")
+
+        # Parse JSON
+        job_data = json.loads(job_content)
+        
+        # Log total number of records processed
+        logger.info(f"Total records processed: {len(job_data)}")
+        logger.info(f"Job data: {job_data}")
+        return job_data
+
+    except Exception as e:
+        # Log any errors that occur
+        logger.error(f"Error loading job: {str(e)}")
+        raise e
+    
+    # job_object = s3.Object(BUCKET,job_file).get()
+    # job = job_object['Body'].read().decode('utf-8')
+    # return json.loads(job)
 
 def save_job(job):
     job_id = job["id"]
@@ -46,7 +70,7 @@ def save_result(result,job):
         dirpath = tempfile.mkdtemp()
         filename = f"{dirpath}/result.zip"
         result.to_file(filename)
-        s3.upload_file(filename,BUCKET,result_file)
+        s3Client.upload_file(filename,BUCKET,result_file)
         shutil.rmtree(dirpath)
     else:
         raise Exception("File type not supported")
@@ -56,7 +80,7 @@ def save_result(result,job):
 def check_for_destination_file(job):
     job_id =job["id"] 
     job_folder =f"{PATH}/{job_id}" 
-    destination_file= f"{job_folder}/destinations.csv"
+    destination_file= f"{job_folder}/destinations.csv" # this file has been successfully generated
     logger.info(f"Checking for destination file at {destination_file}")
 
     # try:
