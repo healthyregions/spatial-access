@@ -1,5 +1,5 @@
 # Spatial Access App
-[![Netlify Status](https://api.netlify.com/api/v1/badges/293d8b91-1f8d-40db-9f8d-646d6fdb90d8/deploy-status)](https://app.netlify.com/sites/helpful-lollipop-5db1fd/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/293d8b91-1f8d-40db-9f8d-646d6fdb90d8/deploy-status)](https://app.netlify.com/sites/spatial-access/deploys)
 
 This repo contains the front-end code and the serverless lambda function specifications for running the spatial access application.
 
