@@ -25,21 +25,21 @@ provider:
     cors: true
   name: aws
   runtime: python3.8
-  region: us-east-2
+  region: us-east-1
   timeout: 20
   environment:
     # Bucket that is used to store the data for the calculations
-    ACCESS_BUCKET: 'access-metrics-dev'
+    ACCESS_BUCKET: 'herop-access-data'
     # Path within the bucket to be used to store the data 
     ACCESS_PATH: "jobs" 
-    REGION_NAME: 'us-east-2'
+    REGION_NAME: 'us-east-1'
   iam:
-   role:
-     statements:
-       - Effect: "Allow"
-         Action:
-           - "s3:*"
-         Resource: "arn:aws:s3:::${self:provider.environment.ACCESS_BUCKET}/${self:provider.environment.ACCESS_PATH}/*" 
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "s3:*"
+          Resource: "arn:aws:s3:::${self:provider.environment.ACCESS_BUCKET}/${self:provider.environment.ACCESS_PATH}/*" 
 functions:
   create_job:
     handler: handler.create_job
@@ -60,12 +60,12 @@ functions:
           path: /jobs/{job_id}/run
           method: post 
   process_job:
-    handler: geo_handler.process_job
+    handler: geo_handler.process_job # trigger when there's creation in the S3 bucket
     timeout: 300
     memorySize: 10240
     events:
       - s3:
-          bucket: access-metrics-dev 
+          bucket: herop-access-data
           event: s3:ObjectCreated:*
           rules:
             - prefix: jobs/ 
@@ -77,6 +77,8 @@ functions:
 
 plugins:
   - serverless-python-requirements
+  - serverless-offline
+  - ./.serverless_plugins/lambda-update-deprecated-runtime.js
 custom:
   pythonRequirements:
     dockerizePip: true

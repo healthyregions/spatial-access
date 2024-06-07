@@ -4,6 +4,7 @@
     "react-scripts": "^5.0.1"
   },
   "devDependencies": {
+    "serverless-offline": "^13.4.0",
     "serverless-python-requirements": "^5.4.0"
   }
 }

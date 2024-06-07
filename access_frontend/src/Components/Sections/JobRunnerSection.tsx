@@ -12,7 +12,44 @@ const JobRunnerSectionComponent: React.FC<SectionComponentSpec> = ({
   resetJob,
   job,
 }) => {
+//   {
+//     "mode": "car",
+//     "geom": "tract",
+//     "threshold": 21,
+//     "destinationFormat": "point",
+//     "includeModelMetrics": false,
+//     "populationSource": "census",
+//     "destinationFile": {
+//         "path": "grocerystores.csv"
+//     },
+//     "destLatCol": "Latit",
+//     "destLngCol": "Longi",
+//     "outputFormat": "GeoJson"
+// }
 
+// or
+// {
+//     "mode": "bike",
+//     "geom": "zip",
+//     "threshold": 63,
+//     "destinationFormat": "point",
+//     "includeModelMetrics": true,
+//     "populationSource": "custom",
+//     "destinationFile": {
+//         "path": "grocerystores.csv"
+//     },
+//     "destLatCol": "compa",
+//     "destLngCol": "Longi",
+//     "useCapacity": true,
+//     "useCategory": true,
+//     "modelType": "2FC",
+//     "capacityColumn": "compa",
+//     "categoryColumn": "NAICS",
+//     "populationFile": {
+//         "path": "grocerystores.csv"
+//     },
+//     "sourceIdColumn": "NAICS"
+// }
   return (
     <>
       <JobRunner resetJob={resetJob} job={job} destinationFile={job.destinationFile} populationFile={job.populationFile} />

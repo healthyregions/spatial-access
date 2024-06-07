@@ -42,11 +42,13 @@ const OutputFormatSectionComponent: React.FC<SectionComponentSpec> = ({
             control={<Radio />}
             label="GeoJson"
           />
-          <FormControlLabel
+          {
+          // #15: disable the Shapefile export until the 'No Space' issue is resolved
+          /* <FormControlLabel
             value="ShapeFile"
             control={<Radio />}
             label="Shapefile"
-          />
+          /> */}
           <FormControlLabel value="CSV" control={<Radio />} label="CSV" />
         </RadioGroup>
       </FormControl>
