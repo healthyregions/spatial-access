@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import {Job} from "../Types/Job";
 
-const BASE_URL = " https://xkzebn43cc.execute-api.us-east-1.amazonaws.com"
+const BASE_URL = " https://a8zu0gpm1l.execute-api.us-east-2.amazonaws.com"
 
 export const validateJob =(job:Job)=>{
   const { populationFile } = job

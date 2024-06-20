@@ -25,21 +25,25 @@ provider:
     cors: true
   name: aws
   runtime: python3.8
-  region: us-east-1
+  region: us-east-2
   timeout: 20
   environment:
     # Bucket that is used to store the data for the calculations
-    ACCESS_BUCKET: 'herop-access-data'
+    ACCESS_BUCKET: 'spatial-access'
     # Path within the bucket to be used to store the data 
     ACCESS_PATH: "jobs" 
-    REGION_NAME: 'us-east-1'
+    SYSTEM_PATH: 'system-files'
+    REGION_NAME: 'us-east-2'
   iam:
     role:
       statements:
         - Effect: "Allow"
           Action:
             - "s3:*"
-          Resource: "arn:aws:s3:::${self:provider.environment.ACCESS_BUCKET}/${self:provider.environment.ACCESS_PATH}/*" 
+          Resource: 
+            - "arn:aws:s3:::${self:provider.environment.ACCESS_BUCKET}/${self:provider.environment.ACCESS_PATH}/*" 
+            - "arn:aws:s3:::${self:provider.environment.ACCESS_BUCKET}/${self:provider.environment.SYSTEM_PATH}/*"
+
 functions:
   create_job:
     handler: handler.create_job
@@ -65,7 +69,7 @@ functions:
     memorySize: 10240
     events:
       - s3:
-          bucket: herop-access-data
+          bucket: spatial-access
           event: s3:ObjectCreated:*
           rules:
             - prefix: jobs/ 
@@ -86,3 +90,9 @@ custom:
     strip: false
     useDownloadCache: true 
     useStaticCache: true 
+
+package:
+  exclude:
+    - node_modules/**
+    - venv/**
+    - __pycache__/**

@@ -3,3 +3,4 @@
 yarn.lock
 .DS_Store
 lambda_functions/.requirements.zip
+lambda_functions/.python-version

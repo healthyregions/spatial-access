@@ -6,6 +6,7 @@ from typing import List, Union
 from access import Access, weights, Datasets
 import boto3
 import os
+import fsspec
 
 def dfToGdf(df, lon, lat, crs='EPSG:4326'):
   '''
@@ -19,55 +20,30 @@ def dfToGdf(df, lon, lat, crs='EPSG:4326'):
     crs=crs,
     geometry=[Point(xy) for xy in zip(df[lon], df[lat])])
 
-# worked well
 DEFAULT_MATRICES = {
     'tract': {
-        'car':'https://uchicago.box.com/shared/static/hkipez75z2p7zivtjdgsfzut4rhm6t6h.parquet',
-        'bike':'https://uchicago.box.com/shared/static/cvkq3dytr6rswzrxlgzeejmieq3n5aal.parquet',
-        'walk':'https://uchicago.box.com/shared/static/swggh8jxj59c7vpxzx1emt7jnd083rmh.parquet'
+        'car':'s3://spatial-access/system-files/US-matrix-TRACT-DRIVING.parquet',
+        'bike':'s3://spatial-access/system-files/US-matrix-TRACT-BICYCLE.parquet',
+        'walk':'s3://spatial-access/system-files/US-matrix-ZIP-DRIVING.parquet'
     },
     'zip': {
-        'car':'https://uchicago.box.com/shared/static/swggh8jxj59c7vpxzx1emt7jnd083rmh.parquet',
-        'bike':'https://uchicago.box.com/shared/static/7yzgf1gx3k3sacntjqber6l40m0d5aqw.parquet', 
-        'walk':'https://uchicago.box.com/shared/static/b3vuqijqys24z146u78dsemn0wvu8i5m.parquet',  
+        'car':'s3://spatial-access/system-files/US-matrix-ZIP-DRIVING.parquet',
+        'bike':'s3://spatial-access/system-files/US-matrix-ZIP-BICYCLE.parquet', 
+        'walk':'s3://spatial-access/system-files/US-matrix-ZIP-WALKING.parquet',  
     }
 }
-
-
 DEFAULT_GEOGRAPHIES = {
-    'tract': 'zip_files/cb_2019_us_tract_500k.zip',
-    'zip':'zip_files/cb_2018_us_zcta510_500k.zip'
+    'tract': 's3://spatial-access/system-files/cb_2019_us_tract_500k.zip',
+    'zip': 's3://spatial-access/system-files/cb_2018_us_zcta510_500k.zip'
 }
-
-# does this mean for our file, if we select tract, we will need GEOID column? if we select zip, we will need GEOID10 column?
 DEFAULT_GEOID_COLS = {
     "tract":"GEOID",
     "zip": "GEOID10"
 }
-
-# csv file seems to work
 DEFAULT_POP_DATA = {    
-    'tract':'https://uchicago.box.com/shared/static/z6xm6tre935xbc06gg4ukzgyicro26cw.csv',
-    'zip': 'https://uchicago.box.com/shared/static/njjpskiuj7amcztrxjws2jfwqlv66t49.csv'
+    'tract':'s3://spatial-access/system-files/DEFAULT_POP_DATA_TRACT.csv',
+    'zip': 's3://spatial-access/system-files/DEFAULT_POP_DATA_ZIP.csv'
 }
-
-# /vsizip/vsicurl/https://uchicago.box.com/shared/static/kfoid6fzlbpyfecmwpe9u16cl5n89ru0.zip' does not exist in the file system, and is not recognized as a supported dataset name.
-
-BUCKET = os.environ["ACCESS_BUCKET"]
-PATH   = os.environ["ACCESS_PATH"]
-object_key = 'zip_files/cb_2019_us_tract_500k.zip'
-local_file_path = '/tmp/cb_2019_us_tract_500k.zip'  # Temporary file path in Lambda environment
-
-
-# DEFAULT_GEOGRAPHIES = {
-#     'tract': 'https://uchicago.box.com/shared/static/kfoid6fzlbpyfecmwpe9u16cl5n89ru0.zip',
-#     'zip':'https://uchicago.box.com/shared/static/270ca6syxcg3dlvohhnt3ap92m4t7cxc.zip'
-# }
-# DEFAULT_GEOGRAPHIES = {
-#     'tract': s3.download_file(BUCKET, object_key, local_file_path), #DriverError: '/vsizip/zip_files/cb_2019_us_tract_500k.zip' does not exist in the file system, and is not recognized as a supported dataset name.
-#     'zip':'https://uchicago.box.com/shared/static/270ca6syxcg3dlvohhnt3ap92m4t7cxc.zip'
-# }
-
 
 StrOrInt = Union[int, str]
 
@@ -132,51 +108,21 @@ class AccessMetricParser:
                 self.matrix_join_col_d,
                 self.matrix_travel_cost_col
             )
-        # if geographies is not None:
-        #     self.set_geographies(geographies, geo_join_col)
-        # else:
-        #     self.set_geographies(
-        #         gpd.read_file(DEFAULT_GEOGRAPHIES[geo_unit]).to_crs('EPSG:4326'), 
-        #         self.geo_join_col
-        #     )
         if geographies is not None:
             self.set_geographies(geographies, geo_join_col)
-            print(f"loading geographies from geographies for {geo_unit} and it is {geographies.columns.tolist()}")
         else:
-            print(f"loading geographies from DEFAULT_GEOGRAPHIES for {geo_unit} and it is {DEFAULT_GEOGRAPHIES[geo_unit]}")
-            self.set_geographies(
-                gpd.read_file(DEFAULT_GEOGRAPHIES[geo_unit]).to_crs('EPSG:4326'), 
-                self.geo_join_col
-            )
-            os.remove(local_file_path)
+            s3_path = DEFAULT_GEOGRAPHIES[geo_unit]
+            local_path = f'/tmp/{geo_unit}.zip'
+            with fsspec.open(s3_path) as file:
+                geographies = gpd.read_file(file, engine='pyogrio')
+            geographies = geographies.to_crs('EPSG:4326')
+            self.set_geographies(geographies, geo_join_col)
         if population_data is not None:
-            self.set_population_data(
-                population_data, 
-                population_join_col, 
-                population_data_col
-            )
+            self.set_population_data(population_data, population_join_col, population_data_col)
         else:
-            print(f"loading population data from DEFAULT_POP_DATA for {geo_unit}")
             default_pop_data = pd.read_csv(DEFAULT_POP_DATA[geo_unit])[[population_join_col, population_data_col]].iloc[1:]
-            # [ERROR] 2024-04-30T20:05:05.583Z fd410db2-5668-45ee-83e1-8b0fa25b9f38 Failed to run 'GEOID'.
-            # Does this means the file must have a FIPS and Total Population column?
-            print(f"The first five default_pop_data is {default_pop_data.head(5)}")
-            self.set_population_data(default_pop_data, 
-                 population_join_col, 
-                 population_data_col
-            )
-        # if geographies is not None:
-        #     self.set_geographies(geographies, geo_join_col)
-        # else:
-        #     print(f"loading geographies from DEFAULT_GEOGRAPHIES for {geo_unit}")
-        #     print(DEFAULT_GEOGRAPHIES[geo_unit])
-        #     self.set_geographies(
-        #         gpd.read_file(DEFAULT_GEOGRAPHIES[geo_unit]).to_crs('EPSG:4326'), 
-        #         self.geo_join_col
-        #     )
-        #     os.remove(local_file_path)
+            self.set_population_data(default_pop_data, population_join_col, population_data_col)
 
-    # this could be the trigger point of Failed to run 'ZIP'
     def set_geographies(self, gdf: gpd.GeoDataFrame, geo_join_col: str) -> None:
         self.geographies = gdf
         self.geo_join_col = geo_join_col
