@@ -67,11 +67,20 @@ const Sections: SectionSpec[] = [
 
 function HomePage() {
 	const { job, setJob, resetJob } = useJob();
-
 	const [step, setStep] = useState<number>(0);
+
+	const clearOutJob = () => {
+		const idItem = localStorage.getItem("job");
+		console.log("idItem", idItem);
+		if (idItem) {
+			const idObject = JSON.parse(idItem);
+			delete idObject.destinationFile;
+			localStorage.setItem("job", JSON.stringify(idObject));
+		}
+	};
 	useEffect(() => {
 		if (typeof window !== "undefined") {
-			localStorage.clear();
+			clearOutJob();
 		}
 	}, []);
 	useLayoutEffect(() => {
@@ -214,7 +223,7 @@ function HomePage() {
 						"JobRunnerSection" && (
 						<Grid item xs={12} sx={{ textAlign: "right" }}>
 							<Button
-								sx={{ margin: "3rem auto", marginRight: "1rem"}}
+								sx={{ margin: "3rem auto", marginRight: "1rem" }}
 								size="large"
 								onClick={() => window.location.reload()}
 								variant="contained"
