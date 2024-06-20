@@ -68,10 +68,17 @@ const Sections: SectionSpec[] = [
 function HomePage() {
 	const { job, setJob, resetJob } = useJob();
 	const [step, setStep] = useState<number>(0);
+	const [localStorageEnabled, setLocalStorageEnabled] = useState(false);
 
 	const clearOutJob = () => {
+		try {
+			localStorage.setItem("test", "test");
+			localStorage.removeItem("test");
+			setLocalStorageEnabled(true);
+		} catch (e) {
+			setLocalStorageEnabled(false);
+		}
 		const idItem = localStorage.getItem("job");
-		console.log("idItem", idItem);
 		if (idItem) {
 			const idObject = JSON.parse(idItem);
 			delete idObject.destinationFile;
@@ -147,6 +154,11 @@ function HomePage() {
 						answers it will then ask you to upload a couple of files describing
 						the resources you are interested in.
 					</Typography>
+					{localStorageEnabled ? (
+						<p>localStorage is enabled</p>
+					) : (
+						<p>localStorage is not enabled</p>
+					)}
 					<Alert severity="info" sx={{ mb: 2, fontSize: 14 }}>
 						<Box sx={{ mb: 1 }}>
 							For now, this application is not compatible of processing csv
