@@ -112,32 +112,6 @@ class AccessMetricParser:
                 self.matrix_join_col_d,
                 self.matrix_travel_cost_col
             )
-        # if geographies is not None:
-        #     self.set_geographies(geographies, geo_join_col)
-        #     print(f"loading geographies from geographies for {geo_unit} and it is {geographies.columns.tolist()}")
-        # else:
-        #     print(f"loading geographies from DEFAULT_GEOGRAPHIES for {geo_unit} and it is {DEFAULT_GEOGRAPHIES[geo_unit]}")
-        #     self.set_geographies(
-        #         gpd.read_file(DEFAULT_GEOGRAPHIES[geo_unit]).to_crs('EPSG:4326'), 
-        #         self.geo_join_col
-        #     )
-        #     os.remove(local_file_path)
-        # if population_data is not None:
-        #     self.set_population_data(
-        #         population_data, 
-        #         population_join_col, 
-        #         population_data_col
-        #     )
-        # else:
-        #     print(f"loading population data from DEFAULT_POP_DATA for {geo_unit}")
-        #     default_pop_data = pd.read_csv(DEFAULT_POP_DATA[geo_unit])[[population_join_col, population_data_col]].iloc[1:]
-        #     # [ERROR] 2024-04-30T20:05:05.583Z fd410db2-5668-45ee-83e1-8b0fa25b9f38 Failed to run 'GEOID'.
-        #     # Does this means the file must have a FIPS and Total Population column?
-        #     print(f"The first five default_pop_data is {default_pop_data.head(5)}")
-        #     self.set_population_data(default_pop_data, 
-        #          population_join_col, 
-        #          population_data_col
-        #     )
         if geographies is not None:
             self.set_geographies(geographies, geo_join_col)
         else:
