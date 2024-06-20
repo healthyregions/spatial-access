@@ -43,6 +43,7 @@ provider:
           Resource: 
             - "arn:aws:s3:::${self:provider.environment.ACCESS_BUCKET}/${self:provider.environment.ACCESS_PATH}/*" 
             - "arn:aws:s3:::${self:provider.environment.ACCESS_BUCKET}/${self:provider.environment.SYSTEM_PATH}/*"
+
 functions:
   create_job:
     handler: handler.create_job
@@ -89,3 +90,9 @@ custom:
     strip: false
     useDownloadCache: true 
     useStaticCache: true 
+
+package:
+  exclude:
+    - node_modules/**
+    - venv/**
+    - __pycache__/**

@@ -4,9 +4,9 @@ from shapely.geometry import Point
 from dataclasses import dataclass
 from typing import List, Union
 from access import Access, weights, Datasets
-from helper import download_from_s3
 import boto3
 import os
+import fsspec
 
 def dfToGdf(df, lon, lat, crs='EPSG:4326'):
   '''
@@ -32,8 +32,6 @@ DEFAULT_MATRICES = {
         'walk':'s3://spatial-access/system-files/US-matrix-ZIP-WALKING.parquet',  
     }
 }
-
-
 DEFAULT_GEOGRAPHIES = {
     'tract': 's3://spatial-access/system-files/cb_2019_us_tract_500k.zip',
     'zip': 's3://spatial-access/system-files/cb_2018_us_zcta510_500k.zip'
@@ -46,8 +44,6 @@ DEFAULT_POP_DATA = {
     'tract':'s3://spatial-access/system-files/DEFAULT_POP_DATA_TRACT.csv',
     'zip': 's3://spatial-access/system-files/DEFAULT_POP_DATA_ZIP.csv'
 }
-BUCKET = os.environ["ACCESS_BUCKET"]
-PATH   = os.environ["ACCESS_PATH"]
 
 StrOrInt = Union[int, str]
 
@@ -117,22 +113,16 @@ class AccessMetricParser:
         else:
             s3_path = DEFAULT_GEOGRAPHIES[geo_unit]
             local_path = f'/tmp/{geo_unit}.zip'
-            print(f"Downloading {s3_path} to {local_path}")
-            download_from_s3(s3_path, local_path)
-            with gpd.read_file(f'zip://{local_path}') as geo_data:
-                geo_data = geo_data.to_crs('EPSG:4326')
-            self.set_geographies(geo_data, geo_join_col)
-            os.remove(local_path)
+            with fsspec.open(s3_path) as file:
+                geographies = gpd.read_file(file, engine='pyogrio')
+            geographies = geographies.to_crs('EPSG:4326')
+            self.set_geographies(geographies, geo_join_col)
         if population_data is not None:
             self.set_population_data(population_data, population_join_col, population_data_col)
         else:
-            print(f"loading population data from DEFAULT_POP_DATA for {geo_unit}")
             default_pop_data = pd.read_csv(DEFAULT_POP_DATA[geo_unit])[[population_join_col, population_data_col]].iloc[1:]
-            print(f"The first five default_pop_data is {default_pop_data.head(5)}")
             self.set_population_data(default_pop_data, population_join_col, population_data_col)
 
-
-    # this could be the trigger point of Failed to run 'ZIP'
     def set_geographies(self, gdf: gpd.GeoDataFrame, geo_join_col: str) -> None:
         self.geographies = gdf
         self.geo_join_col = geo_join_col

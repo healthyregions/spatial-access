@@ -1,8 +1,10 @@
 access
 boto3
+fsspec
 geopandas
 pandas
 pyarrow
 pyproj
 rtree
+s3fs
 shapely

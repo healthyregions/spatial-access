@@ -2,6 +2,8 @@ access
 pyarrow
 geopandas 
 pandas
+fsspec
+s3fs
 shapely
 rtree
 boto3
