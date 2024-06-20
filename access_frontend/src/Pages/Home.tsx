@@ -214,6 +214,14 @@ function HomePage() {
 						"JobRunnerSection" && (
 						<Grid item xs={12} sx={{ textAlign: "right" }}>
 							<Button
+								sx={{ margin: "3rem auto", marginRight: "1rem"}}
+								size="large"
+								onClick={() => window.location.reload()}
+								variant="contained"
+							>
+								Restart Process
+							</Button>
+							<Button
 								sx={{ margin: "3rem auto" }}
 								size="large"
 								onClick={() => setStep((prev) => prev + 1)}
