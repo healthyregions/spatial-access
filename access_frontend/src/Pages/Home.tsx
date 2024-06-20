@@ -69,26 +69,6 @@ function HomePage() {
 	const { job, setJob, resetJob } = useJob();
 	const [step, setStep] = useState<number>(0);
 
-	const clearOutJob = () => {
-		try {
-			const idItem = localStorage.getItem("job");
-			localStorage.removeItem(idItem || "");
-			console.log("Cleared out job from local storage");
-		} catch (e) {
-			console.log("Error clearing out job from local storage", e);
-		}
-		const idItem = localStorage.getItem("job");
-		if (idItem) {
-			const idObject = JSON.parse(idItem);
-			delete idObject.destinationFile;
-			localStorage.setItem("job", JSON.stringify(idObject));
-		}
-	};
-	useEffect(() => {
-		if (typeof window !== "undefined") {
-			clearOutJob();
-		}
-	}, []);
 	useLayoutEffect(() => {
 		window.scrollTo(0, document.body.scrollHeight);
 	}, [step]);
