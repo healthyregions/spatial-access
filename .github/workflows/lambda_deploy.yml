@@ -1,29 +1,32 @@
-name: Deploy lambda functions from main branch
+# #10: No need to re-deploy the lambda functions again when merging sub-branch to main, therefore disable this action for now. 
+# Can re-enable later if we want to create a HEROP aws credential and apply to this action
 
-on:
-  push:
-    branches:
-      - main
+# name: Deploy lambda functions from main branch
 
-jobs:
-  deploy:
-    name: deploy
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x]
-    steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: cd lambda_functions && npm ci
-    - name: serverless deploy
-      uses: serverless/github-action@v3.1
-      with:
-        args: -c "cd lambda_functions && serverless plugin install -n serverless-python-requirements  && serverless deploy"
-        entrypoint: /bin/sh
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   deploy:
+#     name: deploy
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         node-version: [16.x]
+#     steps:
+#     - uses: actions/checkout@v3
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v3
+#       with:
+#         node-version: ${{ matrix.node-version }}
+#     - run: cd lambda_functions && npm ci
+#     - name: serverless deploy
+#       uses: serverless/github-action@v3.1
+#       with:
+#         args: -c "cd lambda_functions && serverless plugin install -n serverless-python-requirements  && serverless deploy"
+#         entrypoint: /bin/sh
+#       env:
+#         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

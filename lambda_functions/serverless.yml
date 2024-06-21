@@ -81,8 +81,8 @@ functions:
 
 plugins:
   - serverless-python-requirements
-  - serverless-offline
   - ./.serverless_plugins/lambda-update-deprecated-runtime.js
+  
 custom:
   pythonRequirements:
     dockerizePip: true
