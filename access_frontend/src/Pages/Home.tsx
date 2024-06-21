@@ -31,7 +31,7 @@ import DestinationInputFormatSection from "../Components/Sections/DestinationsIn
 import DestinationFileUploadSection from "../Components/Sections/DestinationFileUploadSection";
 import OutputFormatSection from "../Components/Sections/OutputFormatSection";
 import JobRunnerSection from "../Components/Sections/JobRunnerSection";
-import { initalJob, useJob } from "../Hooks/useJob";
+import { useJob } from "../Hooks/useJob";
 
 export interface SectionComponentSpec {
 	job: Job;
