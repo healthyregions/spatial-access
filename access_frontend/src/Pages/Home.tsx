@@ -31,7 +31,7 @@ import DestinationInputFormatSection from "../Components/Sections/DestinationsIn
 import DestinationFileUploadSection from "../Components/Sections/DestinationFileUploadSection";
 import OutputFormatSection from "../Components/Sections/OutputFormatSection";
 import JobRunnerSection from "../Components/Sections/JobRunnerSection";
-import { useJob } from "../Hooks/useJob";
+import { initalJob, useJob } from "../Hooks/useJob";
 
 export interface SectionComponentSpec {
 	job: Job;
@@ -209,7 +209,11 @@ function HomePage() {
 						"JobRunnerSection" && (
 						<Grid item xs={12} sx={{ textAlign: "right" }}>
 							<Button
-								sx={{ margin: "3rem auto", marginRight: "1rem" }}
+								sx={{
+									margin: "3rem auto",
+									marginRight: "1rem",
+									display: job.destinationFile === undefined ? "none" : "inline-block",
+								}}
 								size="large"
 								onClick={() => window.location.reload()}
 								variant="contained"

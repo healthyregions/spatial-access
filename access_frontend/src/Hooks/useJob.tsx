@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Job } from "../Types/Job";
 
-const initalJob: Job = {
+export const initalJob: Job = {
 	mode: "car",
 	geom: "tract",
 	threshold: 30,
