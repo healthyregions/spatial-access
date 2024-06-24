@@ -24,7 +24,7 @@ DEFAULT_MATRICES = {
     'tract': {
         'car':'s3://spatial-access/system-files/US-matrix-TRACT-DRIVING.parquet',
         'bike':'s3://spatial-access/system-files/US-matrix-TRACT-BICYCLE.parquet',
-        'walk':'s3://spatial-access/system-files/US-matrix-ZIP-DRIVING.parquet'
+        'walk':'s3://spatial-access/system-files/US-matrix-TRACT-WALKING.parquet'
     },
     'zip': {
         'car':'s3://spatial-access/system-files/US-matrix-ZIP-DRIVING.parquet',
@@ -166,9 +166,9 @@ class AccessMetricParser:
     def set_destination_data(
         self, 
         df: pd.DataFrame, 
-        lat_col: str, 
-        lon_col: str, 
-        geoid_col: str = None
+        lat_col: str = None,
+        lon_col: str = None,
+        geoid_col: str = None,
     ) -> None:
         if geoid_col is not None:
             self.destinations = df

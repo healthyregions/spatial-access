@@ -74,11 +74,17 @@ def process_job(event,context):
             #  load destination data
 
             # if select 'tract', this is the method that throws the error Failed to run 'GEOID'
-            access_parser.set_destination_data(
-                df=destinations,
-                lat_col=job["destLatCol"],
-                lon_col=job["destLngCol"]
-            )
+            if(job.get('destAdminCol') is not None):
+                access_parser.set_destination_data(
+                    df=destinations,
+                    geoid_col=job["destAdminCol"]
+                )
+            else:
+                access_parser.set_destination_data(
+                    df=destinations,
+                    lat_col=job["destLatCol"],
+                    lon_col=job["destLngCol"]
+                )
 
             logger.info(f"Setting threshold" )
             access_parser.set_travel_threshold(job['threshold'])

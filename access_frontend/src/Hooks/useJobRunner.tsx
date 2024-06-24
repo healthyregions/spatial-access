@@ -111,10 +111,8 @@ export const useJobRunner = (
     (async ()=>{
       setStatus("running")
       setError(null)
-      // const testReply = await fetch('api');
-      // console.log("testReply: ", testReply.body);
-      console.log("Job is ", job, JSON.stringify(job));
-      const jobReply= await fetch(`${BASE_URL}/jobs`, {method:"POST", body:JSON.stringify(job) })
+      console.log("Job is ", job, JSON.stringify(job)); // correct
+      const jobReply= await fetch(`${BASE_URL}/jobs`, {method:"POST", body:JSON.stringify(job) }) //wrong
       const jobResponse = await jobReply.json()
       console.log("Job Response is ", jobResponse);
       const jobId = jobResponse.job.id
