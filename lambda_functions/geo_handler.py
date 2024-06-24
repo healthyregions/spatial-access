@@ -61,7 +61,6 @@ def process_job(event,context):
             logger.info(f"got {destinations.shape[0]} destinations" )
             logger.info(f"Setting up access parser" )
 
-            # Failed to run 'zip', probably in the initial setup
             access_parser = AccessMetricParser(
                 transit_mode=job['mode'],
                 geo_unit=job["geom"],
@@ -69,16 +68,18 @@ def process_job(event,context):
                 geo_join_col="GEOID" if job['geom'] == 'tract' else "GEOID10",
                 coerce_geoid=True
             )
-
             logger.info(f"assigning destination data" )
-            #  load destination data
-
-            # if select 'tract', this is the method that throws the error Failed to run 'GEOID'
-            access_parser.set_destination_data(
-                df=destinations,
-                lat_col=job["destLatCol"],
-                lon_col=job["destLngCol"]
-            )
+            if(job.get('destAdminCol') is not None):
+                access_parser.set_destination_data(
+                    df=destinations,
+                    geoid_col=job["destAdminCol"]
+                )
+            else:
+                access_parser.set_destination_data(
+                    df=destinations,
+                    lat_col=job["destLatCol"],
+                    lon_col=job["destLngCol"]
+                )
 
             logger.info(f"Setting threshold" )
             access_parser.set_travel_threshold(job['threshold'])

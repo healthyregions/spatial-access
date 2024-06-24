@@ -14,7 +14,7 @@ s3 = boto3.resource('s3') # this s3 is not called here, can be removed
 def create_job(event,context):
 
     body = json.loads(event['body'])
-    logger.info(json.dumps(body))
+    print(f"create_job body is {json.dumps(body)}")
 
     mode= body['mode'] if 'mode' in body else 'walk'
     geom= body['geom'] if 'geom' in body else 'tract'
@@ -24,9 +24,9 @@ def create_job(event,context):
     populationSource= body['populationSource'] if "populationSource" in body else "census"
     sourcePopulationColumn= body['sourcePopulationColumn'] if "sourcePopulationColumn" in body else None
     sourceIdColumn= body['sourceIdColumn'] if "sourceIdColumn" in body else None
-    destLatCol= body['destLatCol'] if "destLatCol" in body else "Latitude"
-    destLngCol= body['destLngCol'] if "destLngCol" in body else "Longitude"
-    destAdminCol= body['admin'] if "admin" in body else None
+    destLatCol= body['destLatCol'] if "destLatCol" in body else None
+    destLngCol= body['destLngCol'] if "destLngCol" in body else None
+    destAdminCol= body['destAdminCol'] if "destAdminCol" in body else None
     useCapacity= body['useCapacity'] if "useCapacity" in body else False 
     destinationFormat = body['destinationFormat'] if "destinationFormat" in body else "point" 
     useWeights= body['useWeights'] if "useWeights" in body else "point" 
