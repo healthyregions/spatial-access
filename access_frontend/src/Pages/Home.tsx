@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState, useEffect } from "react";
+import React, { useLayoutEffect, useState } from "react";
 
 import "../App.css";
 import {
@@ -67,12 +67,8 @@ const Sections: SectionSpec[] = [
 
 function HomePage() {
 	const { job, setJob, resetJob } = useJob();
-
 	const [step, setStep] = useState<number>(0);
-	useEffect(() => {
-    // Clear local storage every time the page is loaded
-    localStorage.clear();
-  }, []);
+
 	useLayoutEffect(() => {
 		window.scrollTo(0, document.body.scrollHeight);
 	}, [step]);
@@ -128,7 +124,7 @@ function HomePage() {
 					md={6}
 					lg={6}
 					className="fade-in"
-					sx={{ width: "100%"}}
+					sx={{ width: "100%" }}
 				>
 					<Typography variant="body2" sx={{ mb: 2 }}>
 						Welcome to the Access App. You can use this web page to calculate
@@ -140,21 +136,23 @@ function HomePage() {
 					<Alert severity="info" sx={{ mb: 2, fontSize: 14 }}>
 						<Box sx={{ mb: 1 }}>
 							For now, this application is not compatible of processing csv
-							files with more than <b>3MB</b>. You may see <i>infinite job running
-							status error</i> if you try to run a job with a file larger than 3MB.
+							files with more than <b>3MB</b>. You may see{" "}
+							<i>infinite job running status error</i> if you try to run a job
+							with a file larger than 3MB.
 						</Box>
 						<Box>
-							For larger file, please consider splitting it into
-							smaller files or using our{" "}
+							For larger file, please consider splitting it into smaller files
+							or using our{" "}
 							<a href="https://colab.research.google.com/drive/1KXdKgKnXiRlKOuiSDVaBzplr7nrKy64B?usp=sharing#scrollTo=cmHary0c6CNn">
 								CoLab Notebook
 							</a>
 							.
 						</Box>
 					</Alert>
-					<Alert severity="warning" sx={{fontSize: 14}}>
+					<Alert severity="warning" sx={{ fontSize: 14 }}>
 						<Box>
-							If you refresh the home page, you will need to <b>restart</b> the whole process.
+							If you refresh the home page, you will need to <b>restart</b> the
+							whole process.
 						</Box>
 					</Alert>
 				</Grid>
@@ -210,6 +208,18 @@ function HomePage() {
 					ActiveSections[ActiveSections.length - 1].name !==
 						"JobRunnerSection" && (
 						<Grid item xs={12} sx={{ textAlign: "right" }}>
+							<Button
+								sx={{
+									margin: "3rem auto",
+									marginRight: "1rem",
+									display: job.destinationFile === undefined ? "none" : "inline-block",
+								}}
+								size="large"
+								onClick={() => window.location.reload()}
+								variant="contained"
+							>
+								Restart Process
+							</Button>
 							<Button
 								sx={{ margin: "3rem auto" }}
 								size="large"
