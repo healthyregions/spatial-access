@@ -31,7 +31,7 @@ provider:
     # Bucket that is used to store the data for the calculations
     ACCESS_BUCKET: 'spatial-access'
     # Path within the bucket to be used to store the data 
-    ACCESS_PATH: "jobs" 
+    ACCESS_PATH: "development" 
     SYSTEM_PATH: 'system-files'
     REGION_NAME: 'us-east-2'
   iam:
@@ -49,19 +49,19 @@ functions:
     handler: handler.create_job
     events:
       - httpApi:
-          path: /jobs
+          path: /development
           method: post
   get_job:
     handler: handler.get_job
     events:
       - httpApi:
-          path: /jobs/{job_id}
+          path: /development/{job_id}
           method: get 
   run_job:
     handler: handler.run_job
     events:
       - httpApi:
-          path: /jobs/{job_id}/run
+          path: /development/{job_id}/run
           method: post 
   process_job:
     handler: geo_handler.process_job # trigger when there's creation in the S3 bucket
@@ -72,7 +72,7 @@ functions:
           bucket: spatial-access
           event: s3:ObjectCreated:*
           rules:
-            - prefix: jobs/ 
+            - prefix: development/ 
             - suffix: .json
           existing: true
           forceDeploy: true
