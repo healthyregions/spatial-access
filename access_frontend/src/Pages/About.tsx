@@ -2,7 +2,7 @@
 import {Stack, Typography} from '@mui/material'
 
 
-export default function MethodologyPgage(){
+export default function AboutPgage(){
   
   return (
     <Stack sx={{padding:"0px 20px"}} gap="20px">
