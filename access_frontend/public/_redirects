@@ -1,0 +1,4 @@
+# Netlify redirects
+/home                /
+/about               /about
+/methodology         /methodology
