@@ -1,4 +1,1 @@
-# Netlify redirects
-/home                /
-/about               /about
-/methodology         /methodology
+/* /index.html 200
