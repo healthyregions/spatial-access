@@ -1,7 +1,7 @@
 import requests 
 import pandas 
 
-BASE_URL = "https://7kng2w0ibk.execute-api.us-east-2.amazonaws.com/development"
+BASE_URL = "https://dzqowfhmue.execute-api.us-east-2.amazonaws.com/jobs"
 
 def test_workflow():
     newJob = requests.post(BASE_URL).json()
