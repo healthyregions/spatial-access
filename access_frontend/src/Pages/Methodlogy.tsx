@@ -114,14 +114,23 @@ export default function MethodologyPage() {
 					</p>
 				</Box>
 				<Box id="why-spatial-accessibility" sx={sectionStyle}>
-					<Typography variant="h5">
+					<Typography variant="h5" sx={{ marginBottom: "1em" }}>
 						Why <i>spatial</i> accessibility?
 					</Typography>
-					<p>
-						Accessibility is a complex and highly personal phenomena, so spatial
-						accessibility focuses on the potential for communities to access
-						critical goods and services through spatial analysis.
-					</p>
+					<div>
+						<div style={{ float: "left", marginRight: "2em" }}>
+							<img
+								src="/methodlogy/access.jpg"
+								alt="access description"
+								style={{ maxWidth: "40em", height: "auto" }}
+							/>
+						</div>
+						<p>
+							Accessibility is a complex and highly personal phenomena, so
+							spatial accessibility focuses on the potential for communities to
+							access critical goods and services through spatial analysis.
+						</p>
+					</div>
 					<p>
 						We say potential because we do not know that every member of the
 						community actually uses these goods/services, but our analysis
@@ -144,7 +153,9 @@ export default function MethodologyPage() {
 						concerns associated with it, and is still an important Spatial
 						Determinant of Health (SDOH).
 					</p>
-					<WhyDataTable />
+					<Box sx={{ marginTop: "4em" }}>
+						<WhyDataTable />
+					</Box>
 				</Box>
 				<Box id="what-does-spatial-accessibility-quantify" sx={sectionStyle}>
 					<Typography variant="h5">
@@ -997,7 +1008,7 @@ const WhyDataTable = () => {
 	];
 	return (
 		<TableContainer component={Paper}>
-			<Table sx={{ paddingTop: "0.5em" }}>
+			<Table>
 				<TableHead>
 					<TableRow>
 						<TableCell></TableCell>
