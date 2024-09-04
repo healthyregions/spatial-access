@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: development
+service: metrics
 # app and org for use with dashboard.serverless.com
 # app: metrics
 # org: stuartlynn
@@ -31,7 +31,7 @@ provider:
     # Bucket that is used to store the data for the calculations
     ACCESS_BUCKET: 'spatial-access'
     # Path within the bucket to be used to store the data 
-    ACCESS_PATH: "development" 
+    ACCESS_PATH: "jobs" 
     SYSTEM_PATH: 'system-files'
     REGION_NAME: 'us-east-2'
   iam:
@@ -49,19 +49,19 @@ functions:
     handler: handler.create_job
     events:
       - httpApi:
-          path: /development
+          path: /jobs
           method: post
   get_job:
     handler: handler.get_job
     events:
       - httpApi:
-          path: /development/{job_id}
+          path: /jobs/{job_id}
           method: get 
   run_job:
     handler: handler.run_job
     events:
       - httpApi:
-          path: /development/{job_id}/run
+          path: /jobs/{job_id}/run
           method: post 
   process_job:
     handler: geo_handler.process_job # trigger when there's creation in the S3 bucket
@@ -72,7 +72,7 @@ functions:
           bucket: spatial-access
           event: s3:ObjectCreated:*
           rules:
-            - prefix: development/ 
+            - prefix: jobs/ 
             - suffix: .json
           existing: true
           forceDeploy: true
