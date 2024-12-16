@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { Job } from "../Types/Job";
 
-const BASE_URL = "https://a8zu0gpm1l.execute-api.us-east-2.amazonaws.com";
+const BASE_URL = "https://dzqowfhmue.execute-api.us-east-2.amazonaws.com";
 
 export const validateJob = (job: Job) => {
 	const { populationFile } = job;
@@ -42,7 +42,7 @@ async function sleep(ms: number) {
 
 const awaitJobResolved = async (jobId: string) => {
 	while (true) {
-		let resp = await fetch(`${BASE_URL}/jobs/${jobId}`);
+		let resp = await fetch(`${BASE_URL}/development/${jobId}`);
 		let job = await resp.json();
 
 		console.log("Job Stats is ", job);
@@ -65,7 +65,7 @@ const awaitJobResolved = async (jobId: string) => {
 //     let retries = 0;
 
 //     while (retries < maxRetries) {
-//       let resp = await fetch(`${BASE_URL}/jobs/${jobId}`);
+//       let resp = await fetch(`${BASE_URL}/development/${jobId}`);
 //       console.log("awaitJobResolved response while true: ", resp);
 //       if (!resp.ok) {
 //         throw new Error(`Failed to fetch job status for jobId: ${jobId}, status: ${resp.status}`);
@@ -117,7 +117,7 @@ export const useJobRunner = (job: Job) => {
 			setStatus("running");
 			setError(null);
 			console.log("Job is ", job, JSON.stringify(job));
-			const jobReply = await fetch(`${BASE_URL}/jobs`, {
+			const jobReply = await fetch(`${BASE_URL}/development`, {
 				method: "POST",
 				body: JSON.stringify(job),
 			});
@@ -135,7 +135,7 @@ export const useJobRunner = (job: Job) => {
 				});
 			}
 
-			await fetch(`${BASE_URL}/jobs/${jobId}/run`, { method: "POST" });
+			await fetch(`${BASE_URL}/development/${jobId}/run`, { method: "POST" });
 
 			const result = await awaitJobResolved(jobResponse.job.id);
 			if (result.status === "failed") {
