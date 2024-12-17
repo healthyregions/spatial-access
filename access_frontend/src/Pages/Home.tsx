@@ -133,23 +133,24 @@ function HomePage() {
 						answers it will then ask you to upload a couple of files describing
 						the resources you are interested in.
 					</Typography>
-					<Alert severity="info" sx={{ mb: 2, fontSize: 14 }}>
+					<Alert severity="warning" sx={{ mb: 2, fontSize: 14 }}>
 						<Box sx={{ mb: 1 }}>
 							For now, this application is not compatible of processing csv
-							files with more than <b>3MB</b>. You may see{" "}
-							<i>infinite job running status error</i> if you try to run a job
-							with a file larger than 3MB.
+							files with more than <b>3MB</b> or calculating Advanced Metrics.
+							You may see <i>infinite job running status error</i> if you try
+							such scenarios.
 						</Box>
 						<Box>
-							For larger file, please consider splitting it into smaller files
-							or using our{" "}
-							<a href="https://colab.research.google.com/drive/1KXdKgKnXiRlKOuiSDVaBzplr7nrKy64B?usp=sharing#scrollTo=cmHary0c6CNn">
-								CoLab Notebook
-							</a>
-							.
+							<b>
+								Please use our{" "}
+								<a href="https://colab.research.google.com/drive/1KXdKgKnXiRlKOuiSDVaBzplr7nrKy64B?usp=sharing#scrollTo=cmHary0c6CNn">
+									CoLab Notebook
+								</a>
+							</b>{" "}
+							instead. We are updating the application to handle these cases.
 						</Box>
 					</Alert>
-					<Alert severity="warning" sx={{ fontSize: 14 }}>
+					<Alert severity="info" sx={{ fontSize: 14 }}>
 						<Box>
 							If you refresh the home page, you will need to <b>restart</b> the
 							whole process.
@@ -212,7 +213,8 @@ function HomePage() {
 								sx={{
 									margin: "3rem auto",
 									marginRight: "1rem",
-									display: job.destinationFile === undefined ? "none" : "inline-block",
+									display:
+										job.destinationFile === undefined ? "none" : "inline-block",
 								}}
 								size="large"
 								onClick={() => window.location.reload()}
