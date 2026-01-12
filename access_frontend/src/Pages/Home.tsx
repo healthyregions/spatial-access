@@ -143,7 +143,7 @@ function HomePage() {
 						<Box>
 							<b>
 								Please use our{" "}
-								<a href="https://colab.research.google.com/drive/1KXdKgKnXiRlKOuiSDVaBzplr7nrKy64B?usp=sharing#scrollTo=cmHary0c6CNn">
+								<a href="https://drive.google.com/file/d/11YG2hjxQmHw2iIHtHqA-hnX_BHeYiWkl/view?usp=sharing">
 									CoLab Notebook
 								</a>
 							</b>{" "}
